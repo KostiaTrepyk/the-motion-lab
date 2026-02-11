@@ -25,10 +25,10 @@ const button = "rounded-lg active:scale-95 transition-all";
 
 const outlineColors = {
 	primary:
-		"border-1 border-amber-600 hover:border-amber-500 text-amber-600 hover:bg-amber-950",
+		"border border-amber-600 hover:border-amber-500 text-amber-600 hover:bg-amber-950",
 	secondary:
-		"border-1 border-neutral-500 hover:border-neutral-400 text-neutral-400 hover:bg-neutral-900",
-	danger: "border-1 border-red-600 hover:border-red-500 text-red-600 hover:bg-red-950",
+		"border border-neutral-500 hover:border-neutral-400 text-neutral-400 hover:bg-neutral-900",
+	danger: "border border-red-600 hover:border-red-500 text-red-600 hover:bg-red-950",
 };
 
 const underlineColors = {
