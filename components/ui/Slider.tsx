@@ -29,8 +29,9 @@ export function Slider({ setting, changeModuleSetting, ...rest }: SliderProps) {
 				<datalist id={setting.id + "-markers"}>
 					{setting.markers.map((marker) => (
 						<option
-							value={marker}
 							key={setting.id + String(marker)}
+							value={marker}
+							label={String(marker)}
 						></option>
 					))}
 				</datalist>

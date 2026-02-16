@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, TargetAndTransition, Transition } from "motion/react";
+import { motion } from "motion/react";
 import { useState } from "react";
 import Modules from "./components/Modules";
 import View from "./components/view/View";
@@ -39,8 +39,8 @@ function generateMotionSettings(): EditorSetting[] {
 			label: "Scale",
 			value: 1,
 			min: 0,
-			max: 5,
-			markers: [0, 0.5, 1, 1.5, 2.5, 5],
+			max: 2,
+			markers: [0, 0.5, 1, 1.5, 2],
 		},
 		{
 			id: generateUniqueId(),
@@ -70,16 +70,25 @@ const motionModule: MotionModule = {
 			label: "Animate",
 			settings: generateMotionSettings(),
 		},
-		// {
-		// 	id: generateUniqueId(),
-		// 	type: "object",
-		// 	label: "Exit",
-		// 	settings: generateMotionSettings(),
-		// },
+		{
+			id: generateUniqueId(),
+			type: "object",
+			label: "Transition",
+			settings: [
+				{
+					id: generateUniqueId(),
+					type: "slider",
+					label: "Duration",
+					min: 0,
+					max: 1,
+					value: 0.25,
+					step: 0.0125,
+					markers: [0, 0.2, 0.4, 0.6, 0.8, 1],
+				},
+			],
+		},
 	],
 };
-
-// const test: TargetAndTransition = {};
 
 /** All modules except the default module */
 const allModules: Module[] = [motionModule];
