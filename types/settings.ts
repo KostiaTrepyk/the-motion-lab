@@ -9,6 +9,7 @@ export interface SliderSetting extends BaseSetting {
 	min: number;
 	max: number;
 	step?: number;
+	markers?: number[]; // Дополнительные метки на ползунке
 }
 
 export interface TextSetting extends BaseSetting {

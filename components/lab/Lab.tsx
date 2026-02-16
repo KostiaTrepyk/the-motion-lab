@@ -3,10 +3,10 @@
 import { motion, TargetAndTransition, Transition } from "motion/react";
 import { useState } from "react";
 import Modules from "./components/Modules";
-import View from "./components/View/View";
+import View from "./components/view/View";
 import Settings from "./components/settings/Settings";
 import { generateUniqueId } from "@/lib/generateUniqueId";
-import Code from "./components/Code/Code";
+import Code from "./components/code/Code";
 import { DefaultModule, Module, MotionModule } from "@/types/modules";
 import { EditorSetting } from "@/types/settings";
 
@@ -31,6 +31,7 @@ function generateMotionSettings(): EditorSetting[] {
 			value: 0,
 			min: 0,
 			max: 1,
+			markers: [0, 0.25, 0.5, 0.75, 1],
 		},
 		{
 			id: generateUniqueId(),
@@ -39,6 +40,7 @@ function generateMotionSettings(): EditorSetting[] {
 			value: 1,
 			min: 0,
 			max: 5,
+			markers: [0, 0.5, 1, 1.5, 2.5, 5],
 		},
 		{
 			id: generateUniqueId(),
@@ -47,7 +49,8 @@ function generateMotionSettings(): EditorSetting[] {
 			value: 0,
 			min: -720,
 			max: 720,
-			step: 1,
+			step: 5,
+			markers: [-720, -540, -360, -180, 0, 180, 360, 540, 720],
 		},
 	];
 }

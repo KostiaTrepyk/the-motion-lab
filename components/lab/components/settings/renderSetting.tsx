@@ -19,6 +19,7 @@ export function renderSetting(
 				)}
 			{setting.type === "slider" && (
 				<Slider
+					className="w-full"
 					setting={setting}
 					changeModuleSetting={(value) =>
 						changeModuleSetting(module.name, setting.id, value)
@@ -28,7 +29,7 @@ export function renderSetting(
 			{setting.type === "text" && (
 				<input
 					name={setting.label}
-					className="px-2 py-1.5 border border-slate-600 rounded-lg text-slate-400"
+					className="px-2 py-1.5 border border-slate-600 rounded-lg w-full text-slate-400"
 					value={setting.value}
 					type="text"
 					onChange={(e) =>
@@ -41,6 +42,7 @@ export function renderSetting(
 				/>
 			)}
 
+			{/* TODO */}
 			{setting.type === "select" && (
 				<select
 					value={setting.value}
