@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useContext, useLayoutEffect, useState } from "react";
 import IconButton from "@/components/ui/IconButton";
 import { FiRefreshCw } from "react-icons/fi";
 import { twMerge } from "tailwind-merge";
@@ -13,6 +13,10 @@ export default function View({ ...rest }: ViewProps) {
 	const [key, setKey] = useState<number>(1);
 
 	const { modules } = useContext(labContext);
+
+	useLayoutEffect(() => {
+		refresh();
+	}, [modules]);
 
 	function refresh() {
 		setKey((prev) => prev + 1);
