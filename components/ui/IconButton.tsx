@@ -42,7 +42,7 @@ export default function IconButton({
 		<button
 			{...attrs}
 			className={twMerge(
-				"flex items-center rounded-full aspect-square text-white active:scale-95 transition-all",
+				"rounded-full aspect-square text-white active:scale-95 transition-all",
 				variant === "filled" ? colors[color] : outlineColors[color],
 				sizes[size],
 				attrs.className,

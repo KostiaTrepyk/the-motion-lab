@@ -1,16 +1,14 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Cinzel, Inter } from "next/font/google"; // Импортируем шрифты
 import "./globals.css";
+import { Metadata } from "next";
 
-const geistSans = Geist({
-	variable: "--font-geist-sans",
-	subsets: ["latin"],
+// Шрифт для основного текста
+const inter = Inter({
+	subsets: ["latin", "cyrillic"],
+	variable: "--font-inter",
 });
-
-const geistMono = Geist_Mono({
-	variable: "--font-geist-mono",
-	subsets: ["latin"],
-});
+// Шрифт для заголовков (RPG vibe)
+const cinzel = Cinzel({ subsets: ["latin"], variable: "--font-cinzel" });
 
 export const metadata: Metadata = {
 	title: "Motion Alchemy Lab",
@@ -25,7 +23,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+				className={`${inter.variable} ${cinzel.variable} antialiased`}
 			>
 				{children}
 			</body>

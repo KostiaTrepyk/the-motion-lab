@@ -1,6 +1,7 @@
 export interface BaseSetting {
 	id: string; // Уникальный ключ
 	label: string;
+	propertyName: string;
 }
 
 export interface SliderSetting extends BaseSetting {
@@ -25,6 +26,7 @@ export interface SelectSetting extends BaseSetting {
 
 export interface NestedSetting extends BaseSetting {
 	type: "object";
+	collapsed: boolean; // Для UI, чтобы знать, свернут ли объект
 	settings: EditorSetting[]; // Вложенные настройки
 }
 

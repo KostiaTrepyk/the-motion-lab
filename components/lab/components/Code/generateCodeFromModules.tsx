@@ -6,14 +6,15 @@ function isModuleUsed(modules: Module[], moduleName: string): boolean {
 }
 
 export function generateCodeFromModules(modules: Module[]): string {
-	const { isMotionUsed, content, motionSettings } = createSettings(modules);
+	const { isMotionUsed, content, componentAttributes } =
+		createSettings(modules);
 
 	if (isMotionUsed === true) {
-		const motionSettingsStringified = Object.entries(motionSettings).map(
-			([key, value]) => {
-				return `${key}={${JSON.stringify(value)}}`;
-			},
-		);
+		const motionSettingsStringified = Object.entries(
+			componentAttributes,
+		).map(([key, value]) => {
+			return `${key}={${JSON.stringify(value)}}`;
+		}, 1);
 
 		return `<motion.div ${motionSettingsStringified.join(" ")}>${content}</motion.div>`;
 	}
