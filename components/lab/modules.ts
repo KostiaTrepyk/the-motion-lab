@@ -1,10 +1,5 @@
 import { generateUniqueId } from "@/lib/generateUniqueId";
-import {
-	DefaultModule,
-	HoverModule,
-	Module,
-	MotionModule,
-} from "@/types/modules";
+import { DefaultModule, Module, MotionModule } from "@/types/modules";
 import { EditorSetting } from "@/types/settings";
 
 export function generateMotionSettings(): EditorSetting[] {
@@ -67,6 +62,8 @@ export const motionModule: MotionModule = {
 			label: "Initial",
 			propertyName: "initial",
 			collapsed: true,
+			canBeDisabled: true,
+			isDisabled: true,
 			settings: generateMotionSettings(),
 		},
 		{
@@ -75,6 +72,8 @@ export const motionModule: MotionModule = {
 			label: "Animate",
 			propertyName: "animate",
 			collapsed: true,
+			canBeDisabled: true,
+			isDisabled: true,
 			settings: generateMotionSettings(),
 		},
 		{
@@ -83,6 +82,8 @@ export const motionModule: MotionModule = {
 			label: "Transition",
 			propertyName: "transition",
 			collapsed: true,
+			canBeDisabled: true,
+			isDisabled: true,
 			settings: [
 				{
 					id: generateUniqueId(),
@@ -105,23 +106,58 @@ export const motionModule: MotionModule = {
 				},
 			],
 		},
-	],
-};
-
-export const hoverModule: HoverModule = {
-	name: "Hover",
-	collapsed: false,
-	settings: [
 		{
 			id: generateUniqueId(),
 			type: "object",
-			label: "While Hover",
+			label: "While hover",
 			propertyName: "whileHover",
 			collapsed: true,
+			canBeDisabled: true,
+			isDisabled: true,
+			settings: generateMotionSettings(),
+		},
+		{
+			id: generateUniqueId(),
+			type: "object",
+			label: "While tap",
+			propertyName: "whileTap",
+			collapsed: true,
+			canBeDisabled: true,
+			isDisabled: true,
+			settings: generateMotionSettings(),
+		},
+		{
+			id: generateUniqueId(),
+			type: "object",
+			label: "While focus",
+			propertyName: "whileFocus",
+			collapsed: true,
+			canBeDisabled: true,
+			isDisabled: true,
+			settings: generateMotionSettings(),
+		},
+		{
+			id: generateUniqueId(),
+			type: "object",
+			label: "While in view",
+			propertyName: "whileInView",
+			collapsed: true,
+			canBeDisabled: true,
+			isDisabled: true,
+			settings: generateMotionSettings(),
+		},
+		{
+			id: generateUniqueId(),
+			type: "object",
+			label: "While drag",
+			propertyName: "whileDrag",
+			collapsed: true,
+			canBeDisabled: true,
+			isDisabled: true,
 			settings: generateMotionSettings(),
 		},
 	],
 };
 
 /** All modules except the default module */
-export const allModules: Module[] = [motionModule, hoverModule];
+export const allModules: Module[] = [motionModule];

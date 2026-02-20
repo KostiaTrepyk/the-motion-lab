@@ -10,10 +10,14 @@ function convertSettings(
 	const result: ReturnType<typeof convertSettings> = {};
 
 	settings.forEach((setting) => {
+		if (setting.isDisabled && setting.canBeDisabled) return;
+
 		if (setting.type === "object") {
 			result[setting.propertyName] = {};
 
 			setting.settings.forEach((s) => {
+				if (s.isDisabled && s.canBeDisabled) return;
+
 				if (s.type === "object") {
 					(result[setting.propertyName] as any)[s.propertyName] =
 						convertSettings(s.settings);
@@ -54,13 +58,6 @@ export function createSettings(modules: Module[]) {
 				break;
 
 			case "Motion":
-				componentAttributes = {
-					...componentAttributes,
-					...convertSettings(module.settings),
-				};
-				break;
-
-			case "Hover":
 				componentAttributes = {
 					...componentAttributes,
 					...convertSettings(module.settings),

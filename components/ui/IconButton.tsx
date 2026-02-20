@@ -26,9 +26,9 @@ const outlineColors = {
 };
 
 const sizes = {
-	small: "p-1",
-	medium: "p-2 h-9",
-	large: "p-3",
+	small: "p-1 h-6",
+	medium: "p-1.5 h-8",
+	large: "p-1 h-10",
 };
 
 export default function IconButton({

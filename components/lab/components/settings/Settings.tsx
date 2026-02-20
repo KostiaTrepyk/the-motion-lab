@@ -1,25 +1,22 @@
+"use client";
+
 import { twMerge } from "tailwind-merge";
 import { renderSetting } from "./renderSetting";
-import { Module } from "@/types/modules";
 import IconButton from "@/components/ui/IconButton";
 import { MdDelete } from "react-icons/md";
+import { labContext } from "@/context/lab.context";
+import { useContext } from "react";
 
-export interface SettingsProps extends React.HTMLAttributes<HTMLDivElement> {
-	modules: Module[];
-	removeModule: (moduleName: string) => void;
-	changeModuleSetting: (
-		moduleName: string,
-		settingId: string,
-		value: number | string,
-	) => void;
-}
+export interface SettingsProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export default function Settings({
-	modules,
-	removeModule,
-	changeModuleSetting,
-	...rest
-}: SettingsProps) {
+export default function Settings({ ...rest }: SettingsProps) {
+	const {
+		modules,
+		removeModule,
+		changeModuleSetting,
+		toggleSettingDisabled,
+	} = useContext(labContext);
+
 	return (
 		<div
 			{...rest}
@@ -50,6 +47,7 @@ export default function Settings({
 									module,
 									setting,
 									changeModuleSetting,
+									toggleSettingDisabled,
 								),
 							)}
 						</div>

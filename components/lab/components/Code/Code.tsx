@@ -1,11 +1,14 @@
-import { Module } from "@/types/modules";
+"use client";
+
 import { generateCodeFromModules } from "./generateCodeFromModules";
+import { useContext } from "react";
+import { labContext } from "@/context/lab.context";
 
-export interface CodeProps extends React.HTMLAttributes<HTMLDivElement> {
-	modules: Module[];
-}
+export interface CodeProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export default function Code({ modules, ...rest }: CodeProps) {
+export default function Code({ ...rest }: CodeProps) {
+	const { modules } = useContext(labContext);
+
 	return (
 		<div {...rest}>
 			<div className="border-neutral-900 border-t"></div>

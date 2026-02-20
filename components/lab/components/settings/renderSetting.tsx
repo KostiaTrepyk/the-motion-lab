@@ -1,20 +1,47 @@
 import { Module } from "@/types/modules";
-import { SettingsProps } from "./Settings";
 import { Slider } from "@/components/ui/Slider";
 import { EditorSetting } from "@/types/settings";
 import { Collapse } from "@/components/ui/Collapse";
+import IconButton from "@/components/ui/IconButton";
+import { BiSolidHide } from "react-icons/bi";
+import { LabContextType } from "@/context/lab.context";
 
 export function renderSetting(
 	module: Module,
 	setting: EditorSetting,
-	changeModuleSetting: SettingsProps["changeModuleSetting"],
+	changeModuleSetting: LabContextType["changeModuleSetting"],
+	toggleSettingDisabled: LabContextType["toggleSettingDisabled"],
 ): React.JSX.Element {
+	function toggleDisabled() {
+		toggleSettingDisabled(module.name, setting.id);
+	}
+
 	return (
 		<div key={setting.id}>
+			{setting.canBeDisabled && (
+				<IconButton
+					variant="outline"
+					color="secondary"
+					size="small"
+					onClick={toggleDisabled}
+				>
+					{setting.isDisabled ? (
+						<BiSolidHide className="w-full" />
+					) : (
+						""
+					)}
+				</IconButton>
+			)}
+
 			{setting.type === "object" && (
 				<Collapse label={setting.label} isCollapsed={module.collapsed}>
 					{setting.settings.map((s) =>
-						renderSetting(module, s, changeModuleSetting),
+						renderSetting(
+							module,
+							s,
+							changeModuleSetting,
+							toggleSettingDisabled,
+						),
 					)}
 				</Collapse>
 			)}

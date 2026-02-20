@@ -2,6 +2,8 @@ export interface BaseSetting {
 	id: string; // Уникальный ключ
 	label: string;
 	propertyName: string;
+	isDisabled?: boolean; // Активна ли настройка
+	canBeDisabled?: boolean; // Может ли настройка быть отключена
 }
 
 export interface SliderSetting extends BaseSetting {

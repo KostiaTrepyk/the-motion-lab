@@ -1,10 +1,6 @@
 import { Module } from "@/types/modules";
 import { createSettings } from "../createSettings";
 
-function isModuleUsed(modules: Module[], moduleName: string): boolean {
-	return modules.some((module) => module.name === moduleName);
-}
-
 export function generateCodeFromModules(modules: Module[]): string {
 	const { isMotionUsed, content, componentAttributes } =
 		createSettings(modules);

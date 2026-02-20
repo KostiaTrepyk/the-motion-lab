@@ -1,6 +1,6 @@
 import { EditorSetting } from "./settings";
 
-export type Module = DefaultModule | MotionModule | HoverModule;
+export type Module = DefaultModule | MotionModule;
 
 export interface BaseModule {
 	name: string;
@@ -15,10 +15,5 @@ export interface DefaultModule extends BaseModule {
 
 export interface MotionModule extends BaseModule {
 	name: "Motion";
-	settings: EditorSetting[];
-}
-
-export interface HoverModule extends BaseModule {
-	name: "Hover";
 	settings: EditorSetting[];
 }

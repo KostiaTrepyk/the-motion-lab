@@ -1,16 +1,15 @@
-import { Module } from "@/types/modules";
+"use client";
+
+import { labContext } from "@/context/lab.context";
+import { useContext } from "react";
 import { twMerge } from "tailwind-merge";
+import { allModules } from "../../modules";
 
-interface ModulesProps extends React.HTMLAttributes<HTMLDivElement> {
-	allModules: Module[];
-	addModule: (module: Module) => void;
-}
+interface ModulesProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export default function Modules({
-	allModules,
-	addModule,
-	...rest
-}: ModulesProps) {
+export default function Modules({ ...rest }: ModulesProps) {
+	const { addModule } = useContext(labContext);
+
 	return (
 		<div {...rest} className={twMerge(rest.className, "p-4")}>
 			{allModules.map((module) => (

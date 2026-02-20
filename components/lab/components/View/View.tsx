@@ -1,16 +1,18 @@
-import { useState } from "react";
+"use client";
+
+import { useContext, useState } from "react";
 import IconButton from "@/components/ui/IconButton";
 import { FiRefreshCw } from "react-icons/fi";
 import { twMerge } from "tailwind-merge";
-import { Module } from "@/types/modules";
 import { generateElementFromModules } from "./generateElementFromModules";
+import { labContext } from "@/context/lab.context";
 
-interface ViewProps extends React.HTMLAttributes<HTMLDivElement> {
-	modules: Module[];
-}
+interface ViewProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export default function View({ modules, ...rest }: ViewProps) {
+export default function View({ ...rest }: ViewProps) {
 	const [key, setKey] = useState<number>(1);
+
+	const { modules } = useContext(labContext);
 
 	function refresh() {
 		setKey((prev) => prev + 1);
