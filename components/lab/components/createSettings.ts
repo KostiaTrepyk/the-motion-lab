@@ -34,13 +34,12 @@ function convertSettings(
 	return result;
 }
 
-function isModuleUsed(modules: Module[], moduleName: string): boolean {
+function isModuleUsed(modules: Module[], moduleName: Module["name"]): boolean {
 	return modules.some((module) => module.name === moduleName);
 }
 
 export function createSettings(modules: Module[]) {
-	let isMotionUsed =
-		isModuleUsed(modules, "Motion") || isModuleUsed(modules, "Hover");
+	let isMotionUsed = isModuleUsed(modules, "Motion");
 	let content = "";
 	let componentAttributes: MotionNodeAnimationOptions = {};
 

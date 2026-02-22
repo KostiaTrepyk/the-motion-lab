@@ -11,14 +11,16 @@ export interface LabContextType {
 		newValue: number | string | boolean,
 	) => void;
 	toggleSettingDisabled: (moduleName: string, settingId: string) => void;
+	findModuleByName: (moduleName: string) => Module | undefined;
 }
 
 const defaultValue: LabContextType = {
 	modules: [],
-	addModule: (module) => {},
-	removeModule: (moduleName) => {},
-	changeModuleSetting: (moduleName, settingId, newValue) => {},
-	toggleSettingDisabled: (moduleName, settingId) => {},
+	addModule: () => {},
+	removeModule: () => {},
+	changeModuleSetting: () => {},
+	toggleSettingDisabled: () => {},
+	findModuleByName: () => undefined,
 };
 
 export const labContext = createContext<LabContextType>(defaultValue);

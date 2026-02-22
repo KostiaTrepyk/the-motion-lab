@@ -81,6 +81,10 @@ export default function LabProvider({ children }: React.PropsWithChildren) {
 		);
 	}
 
+	function findModuleByName(moduleName: string): Module | undefined {
+		return modules.find((module) => module.name === moduleName);
+	}
+
 	return (
 		<labContext.Provider
 			value={{
@@ -89,6 +93,7 @@ export default function LabProvider({ children }: React.PropsWithChildren) {
 				removeModule,
 				changeModuleSetting,
 				toggleSettingDisabled,
+				findModuleByName
 			}}
 		>
 			{children}

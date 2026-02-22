@@ -3,18 +3,20 @@ import { Slider } from "@/components/ui/Slider";
 import { EditorSetting } from "@/types/settings";
 import { Collapse } from "@/components/ui/Collapse";
 import IconButton from "@/components/ui/IconButton";
-import { BiSolidHide } from "react-icons/bi";
 import { LabContextType } from "@/context/lab.context";
+import { MdDelete } from "react-icons/md";
 
 export function renderSetting(
 	module: Module,
 	setting: EditorSetting,
 	changeModuleSetting: LabContextType["changeModuleSetting"],
 	toggleSettingDisabled: LabContextType["toggleSettingDisabled"],
-): React.JSX.Element {
+): React.ReactNode {
 	function toggleDisabled() {
 		toggleSettingDisabled(module.name, setting.id);
 	}
+
+	if (setting.isDisabled && setting.canBeDisabled) return null;
 
 	return (
 		<div key={setting.id}>
@@ -25,11 +27,7 @@ export function renderSetting(
 					size="small"
 					onClick={toggleDisabled}
 				>
-					{setting.isDisabled ? (
-						<BiSolidHide className="w-full" />
-					) : (
-						""
-					)}
+					<MdDelete className="w-full" />
 				</IconButton>
 			)}
 
