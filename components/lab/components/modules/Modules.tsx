@@ -1,12 +1,12 @@
 "use client";
 
-import { labContext } from "@/context/lab.context";
+import { labContext } from "@/context/lab/lab.context";
 import { useContext } from "react";
 import { twMerge } from "tailwind-merge";
 import IconButton from "@/components/ui/IconButton";
 import { MdAdd } from "react-icons/md";
 import { Collapse } from "@/components/ui/Collapse";
-import { allTemplates } from "../../templates";
+import { allTemplates } from "../../../../data/templates";
 
 export default function Modules({ ...rest }: React.HTMLAttributes<HTMLDivElement>) {
 	const { addModuleFromTemplate, findModuleByName, getUnusedTemplateSettings, addSetting } = useContext(labContext);

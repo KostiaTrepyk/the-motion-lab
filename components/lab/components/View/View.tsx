@@ -5,7 +5,7 @@ import IconButton from "@/components/ui/IconButton";
 import { FiRefreshCw } from "react-icons/fi";
 import { twMerge } from "tailwind-merge";
 import { generateElementFromModules } from "./generateElementFromModules";
-import { labContext } from "@/context/lab.context";
+import { labContext } from "@/context/lab/lab.context";
 
 export default function View({ ...rest }: React.HTMLAttributes<HTMLDivElement>) {
 	const [key, setKey] = useState<number>(1);

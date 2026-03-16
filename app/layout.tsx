@@ -1,7 +1,7 @@
 import { Cinzel, Inter } from "next/font/google"; // Импортируем шрифты
 import "./globals.css";
 import { Metadata } from "next";
-import LabProvider from "@/context/lab.provider";
+import LabProvider from "@/context/lab/lab.provider";
 
 // Шрифт для основного текста
 const inter = Inter({

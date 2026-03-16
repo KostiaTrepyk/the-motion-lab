@@ -2,7 +2,7 @@ import { Slider } from "@/components/ui/Slider";
 import { Setting } from "@/types/settings";
 import { Collapse } from "@/components/ui/Collapse";
 import IconButton from "@/components/ui/IconButton";
-import { LabContextType } from "@/context/lab.context";
+import { LabContextType } from "@/context/lab/lab.context";
 import { Module } from "@/types/modules";
 import { BiShow, BiSolidHide } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";

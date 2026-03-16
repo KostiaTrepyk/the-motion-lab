@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 import { renderSetting } from "./renderSetting";
 import IconButton from "@/components/ui/IconButton";
 import { MdDelete } from "react-icons/md";
-import { labContext } from "@/context/lab.context";
+import { labContext } from "@/context/lab/lab.context";
 import { useContext } from "react";
 
 export default function Settings({ ...rest }: React.HTMLAttributes<HTMLDivElement>) {

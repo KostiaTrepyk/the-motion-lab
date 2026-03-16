@@ -2,7 +2,7 @@
 
 import { generateCodeFromModules } from "./generateCodeFromModules";
 import { useContext } from "react";
-import { labContext } from "@/context/lab.context";
+import { labContext } from "@/context/lab/lab.context";
 
 export default function Code({ ...rest }: React.HTMLAttributes<HTMLDivElement>) {
 	const { modules } = useContext(labContext);
