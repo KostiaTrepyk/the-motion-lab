@@ -1,7 +1,7 @@
-import { Module } from "@/types/modules";
 import { motion } from "framer-motion";
 import { type JSX } from "react";
 import { createSettings } from "../createSettings";
+import { Module } from "@/types/modules";
 
 export function generateElementFromModules(modules: Module[]): JSX.Element {
 	const { isMotionUsed, content, componentAttributes } = createSettings(modules);

@@ -4,9 +4,7 @@ import { generateCodeFromModules } from "./generateCodeFromModules";
 import { useContext } from "react";
 import { labContext } from "@/context/lab.context";
 
-export interface CodeProps extends React.HTMLAttributes<HTMLDivElement> {}
-
-export default function Code({ ...rest }: CodeProps) {
+export default function Code({ ...rest }: React.HTMLAttributes<HTMLDivElement>) {
 	const { modules } = useContext(labContext);
 
 	return (

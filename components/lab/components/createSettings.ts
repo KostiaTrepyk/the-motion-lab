@@ -1,12 +1,10 @@
 import { NestedRecord } from "@/types/common";
 import { Module } from "@/types/modules";
-import { EditorSetting } from "@/types/settings";
+import { Setting } from "@/types/settings";
 import { MotionNodeAnimationOptions } from "motion";
 
 /** Helper function to convert editor settings to a nested record */
-function convertSettings(
-	settings: EditorSetting[],
-): NestedRecord<string | number> {
+function convertSettings(settings: Setting[]): NestedRecord<string | number> {
 	const result: ReturnType<typeof convertSettings> = {};
 
 	settings.forEach((setting) => {
@@ -19,11 +17,9 @@ function convertSettings(
 				if (s.isDisabled && s.canBeDisabled) return;
 
 				if (s.type === "object") {
-					(result[setting.propertyName] as any)[s.propertyName] =
-						convertSettings(s.settings);
+					(result[setting.propertyName] as any)[s.propertyName] = convertSettings(s.settings);
 				} else {
-					(result[setting.propertyName] as any)[s.propertyName] =
-						s.value;
+					(result[setting.propertyName] as any)[s.propertyName] = s.value;
 				}
 			});
 		} else {
@@ -39,18 +35,15 @@ function isModuleUsed(modules: Module[], moduleName: Module["name"]): boolean {
 }
 
 export function createSettings(modules: Module[]) {
-	let isMotionUsed = isModuleUsed(modules, "Motion");
+	const isMotionUsed = isModuleUsed(modules, "Motion");
 	let content = "";
 	let componentAttributes: MotionNodeAnimationOptions = {};
 
-	for (const module of modules) {
-		switch (module.name) {
+	for (const currentModule of modules) {
+		switch (currentModule.name) {
 			case "Default":
-				module.settings.forEach((setting) => {
-					if (
-						setting.propertyName === "content" &&
-						setting.type === "text"
-					) {
+				currentModule.settings.forEach((setting) => {
+					if (setting.propertyName === "content" && setting.type === "text") {
 						content = setting.value;
 					}
 				});
@@ -59,13 +52,12 @@ export function createSettings(modules: Module[]) {
 			case "Motion":
 				componentAttributes = {
 					...componentAttributes,
-					...convertSettings(module.settings),
+					...convertSettings(currentModule.settings),
 				};
 				break;
 
 			default:
-				// @ts-ignore
-				console.error(`Unknown module: ${module.name}`);
+				console.error(`Unknown module: ${currentModule.name}`);
 		}
 	}
 	return { isMotionUsed, content, componentAttributes };

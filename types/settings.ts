@@ -2,8 +2,10 @@ export interface BaseSetting {
 	id: string; // Уникальный ключ
 	label: string;
 	propertyName: string;
-	isDisabled?: boolean; // Активна ли настройка
-	canBeDisabled?: boolean; // Может ли настройка быть отключена
+	isDisabled: boolean; // Активна ли настройка
+	canBeDisabled: boolean; // Может ли настройка быть отключена
+	isRequired: boolean;
+	templateSettingId: string;
 }
 
 export interface SliderSetting extends BaseSetting {
@@ -29,11 +31,7 @@ export interface SelectSetting extends BaseSetting {
 export interface NestedSetting extends BaseSetting {
 	type: "object";
 	collapsed: boolean; // Для UI, чтобы знать, свернут ли объект
-	settings: EditorSetting[]; // Вложенные настройки
+	settings: Setting[]; // Вложенные настройки
 }
 
-export type EditorSetting =
-	| SliderSetting
-	| TextSetting
-	| SelectSetting
-	| NestedSetting;
+export type Setting = SliderSetting | TextSetting | SelectSetting | NestedSetting;

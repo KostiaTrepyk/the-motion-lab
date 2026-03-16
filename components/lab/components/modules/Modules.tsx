@@ -3,27 +3,24 @@
 import { labContext } from "@/context/lab.context";
 import { useContext } from "react";
 import { twMerge } from "tailwind-merge";
-import { allModules } from "../../modules";
 import IconButton from "@/components/ui/IconButton";
 import { MdAdd } from "react-icons/md";
 import { Collapse } from "@/components/ui/Collapse";
+import { allTemplates } from "../../templates";
 
-interface ModulesProps extends React.HTMLAttributes<HTMLDivElement> {}
-
-export default function Modules({ ...rest }: ModulesProps) {
-	const { modules, addModule, findModuleByName, toggleSettingDisabled } =
-		useContext(labContext);
+export default function Modules({ ...rest }: React.HTMLAttributes<HTMLDivElement>) {
+	const { addModuleFromTemplate, findModuleByName, getUnusedTemplateSettings, addSetting } = useContext(labContext);
 
 	return (
 		<div {...rest} className={twMerge(rest.className, "p-4")}>
-			{allModules.map((module) => (
-				<div key={module.name}>
-					<div className="flex justify-between items-center mb-2">
-						<div className="text-xl">{module.name}</div>
+			{allTemplates.map((template) => (
+				<div key={template.name}>
+					<div className="flex justify-between items-center">
+						<div className="text-xl">{template.name}</div>
 
-						{findModuleByName(module.name) === undefined && (
+						{findModuleByName(template.name) === undefined && (
 							<IconButton
-								onClick={() => addModule(module)}
+								onClick={() => addModuleFromTemplate(template.id)}
 								variant="outline"
 								color="secondary"
 							>
@@ -32,8 +29,9 @@ export default function Modules({ ...rest }: ModulesProps) {
 						)}
 					</div>
 
+					{/* Settings */}
 					{(() => {
-						const m = findModuleByName(module.name);
+						const m = findModuleByName(template.name);
 
 						if (m === undefined) return null;
 
@@ -44,38 +42,25 @@ export default function Modules({ ...rest }: ModulesProps) {
 									className: "flex flex-col gap-2",
 								}}
 							>
-								{m.settings.map((setting) => {
-									if (
-										setting.isDisabled &&
-										setting.canBeDisabled
-									) {
-										return (
-											<div
-												key={setting.id}
-												className="flex justify-between items-center"
-											>
-												<div>{setting.label}</div>
+								{getUnusedTemplateSettings(template.id)?.map((templateSetting) => (
+									<div key={templateSetting.id} className="flex justify-between items-center">
+										<div>{templateSetting.label}</div>
 
-												<IconButton
-													onClick={() =>
-														toggleSettingDisabled(
-															module.name,
-															setting.id,
-														)
-													}
-													variant="outline"
-													color="secondary"
-													size="small"
-												>
-													<MdAdd className="w-full scale-125" />
-												</IconButton>
-											</div>
-										);
-									}
-								})}
+										<IconButton
+											onClick={() => addSetting(template.id, templateSetting.id)}
+											variant="outline"
+											color="secondary"
+											size="small"
+										>
+											<MdAdd className="w-full scale-125" />
+										</IconButton>
+									</div>
+								))}
 							</Collapse>
 						);
 					})()}
+
+					<div className="my-4 border-neutral-900 border-b w-full"></div>
 				</div>
 			))}
 		</div>

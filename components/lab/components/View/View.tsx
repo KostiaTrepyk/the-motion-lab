@@ -1,26 +1,24 @@
 "use client";
 
-import { useContext, useLayoutEffect, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import IconButton from "@/components/ui/IconButton";
 import { FiRefreshCw } from "react-icons/fi";
 import { twMerge } from "tailwind-merge";
 import { generateElementFromModules } from "./generateElementFromModules";
 import { labContext } from "@/context/lab.context";
 
-interface ViewProps extends React.HTMLAttributes<HTMLDivElement> {}
-
-export default function View({ ...rest }: ViewProps) {
+export default function View({ ...rest }: React.HTMLAttributes<HTMLDivElement>) {
 	const [key, setKey] = useState<number>(1);
 
 	const { modules } = useContext(labContext);
 
-	useLayoutEffect(() => {
-		refresh();
-	}, [modules]);
-
-	function refresh() {
+	const refresh = useCallback((): void => {
 		setKey((prev) => prev + 1);
-	}
+	}, []);
+
+	/* useLayoutEffect(() => {
+		refresh();
+	}, [modules, refresh]); */
 
 	return (
 		<div {...rest} className={twMerge(rest.className, "flex flex-col p-4")}>
@@ -30,10 +28,7 @@ export default function View({ ...rest }: ViewProps) {
 				</IconButton>
 			</div>
 
-			<div
-				className="flex justify-center items-center w-full grow"
-				key={key}
-			>
+			<div className="flex justify-center items-center w-full grow" key={key}>
 				{/* <div className="border border-neutral-800 border-dashed"> */}
 				{generateElementFromModules(modules)}
 				{/* </div> */}

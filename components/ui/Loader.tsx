@@ -6,9 +6,7 @@ export default function Loader() {
 				<div className="absolute bg-amber-500/20 shadow-[0_0_30px_rgba(160,120,29,0.5)] rounded-full w-12 h-12 animate-pulse" />
 			</div>
 
-			<h1 className="font-rpg text-amber-500 text-2xl tracking-[0.2em]">
-				INITIALIZING LAB...
-			</h1>
+			<h1 className="font-rpg text-amber-500 text-2xl tracking-[0.2em]">INITIALIZING LAB...</h1>
 		</div>
 	);
 }

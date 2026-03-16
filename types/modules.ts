@@ -1,19 +1,19 @@
-import { EditorSetting } from "./settings";
+import { Setting } from "./settings";
 
-export type Module = DefaultModule | MotionModule;
+export type ModuleName = "Default" | "Motion";
 
-export interface BaseModule {
-	name: string;
+export interface Module {
+	name: ModuleName;
 	collapsed: boolean; // Для UI, чтобы знать, свернут ли модуль
-	settings: EditorSetting[];
+	settings: Setting[];
 }
 
-export interface DefaultModule extends BaseModule {
+export interface DefaultModule extends Module {
 	name: "Default";
-	settings: EditorSetting[];
+	settings: Setting[];
 }
 
-export interface MotionModule extends BaseModule {
+export interface MotionModule extends Module {
 	name: "Motion";
-	settings: EditorSetting[];
+	settings: Setting[];
 }

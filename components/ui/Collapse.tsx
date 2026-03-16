@@ -29,21 +29,10 @@ export function Collapse({
 
 	return (
 		<div {...containerAttrs}>
-			<div
-				{...labelContainerAttrs}
-				className={twMerge(
-					labelContainerAttrs.className,
-					"flex justify-between",
-				)}
-			>
+			<div {...labelContainerAttrs} className={twMerge(labelContainerAttrs.className, "flex justify-between")}>
 				<div className="text-lg">{label}</div>
 
-				<IconButton
-					variant="outline"
-					color="secondary"
-					size="small"
-					onClick={toggleCollapse}
-				>
+				<IconButton variant="outline" color="secondary" size="small" onClick={toggleCollapse}>
 					{collapsed ? (
 						<MdOutlineArrowDropDown className="w-full rotate-0 scale-150 transition-[rotate] ease-out" />
 					) : (
@@ -52,13 +41,7 @@ export function Collapse({
 				</IconButton>
 			</div>
 
-			<div
-				{...itemsContainerAttrs}
-				className={twMerge(
-					itemsContainerAttrs.className,
-					collapsed ? "hidden" : "",
-				)}
-			>
+			<div {...itemsContainerAttrs} className={twMerge(itemsContainerAttrs.className, collapsed ? "hidden" : "")}>
 				{children}
 			</div>
 		</div>

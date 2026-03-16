@@ -9,12 +9,7 @@ export default function HomePage() {
 				<Link href="/lab" size="large" variant="button" color="primary">
 					Go to Lab
 				</Link>
-				<Link
-					href="/lab"
-					size="large"
-					variant="outline"
-					color="primary"
-				>
+				<Link href="/lab" size="large" variant="outline" color="primary">
 					Go to Lab
 				</Link>
 				<Link href="/lab" size="large" variant="link" color="primary">
@@ -22,28 +17,13 @@ export default function HomePage() {
 				</Link>
 			</div>
 			<div className="flex gap-2 p-2">
-				<Link
-					href="/lab"
-					size="medium"
-					variant="button"
-					color="secondary"
-				>
+				<Link href="/lab" size="medium" variant="button" color="secondary">
 					Go to Lab
 				</Link>
-				<Link
-					href="/lab"
-					size="medium"
-					variant="outline"
-					color="secondary"
-				>
+				<Link href="/lab" size="medium" variant="outline" color="secondary">
 					Go to Lab
 				</Link>
-				<Link
-					href="/lab"
-					size="medium"
-					variant="link"
-					color="secondary"
-				>
+				<Link href="/lab" size="medium" variant="link" color="secondary">
 					Go to Lab
 				</Link>
 			</div>

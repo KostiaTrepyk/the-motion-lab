@@ -5,13 +5,7 @@ import { FiAlertTriangle, FiHome, FiRefreshCcw } from "react-icons/fi";
 import Button from "@/components/ui/Button";
 import Link from "@/components/ui/Link";
 
-export default function Error({
-	error,
-	reset,
-}: {
-	error: Error & { digest?: string };
-	reset: () => void;
-}) {
+export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
 	return (
 		<main className="relative flex flex-col justify-center items-center p-4 h-screen overflow-hidden text-center">
 			{/* Фоновый эффект (Красное свечение опасности) */}
@@ -48,10 +42,8 @@ export default function Error({
 					transition={{ delay: 0.4 }}
 					className="bg-red-950/30 p-4 border border-red-900/50 rounded-lg max-w-md font-mono text-red-200/80 text-sm"
 				>
-					<p className="opacity-50 mb-2 text-red-500 text-xs uppercase">
-						Error Log:
-					</p>
-					"{error.message || "Unknown magical disturbance detected."}"
+					<p className="opacity-50 mb-2 text-red-500 text-xs uppercase">Error Log:</p>&quot;
+					{error.message || "Unknown magical disturbance detected."}&quot;
 				</motion.div>
 
 				{/* 4. Кнопки действий */}
@@ -62,24 +54,13 @@ export default function Error({
 					className="flex flex-wrap gap-4"
 				>
 					{/* Кнопка RESET (Попробовать снова) */}
-					<Button
-						className="group"
-						color="danger"
-						size="large"
-						onClick={() => reset()}
-					>
+					<Button className="group" color="danger" size="large" onClick={() => reset()}>
 						<FiRefreshCcw className="w-4 h-4 group-hover:rotate-180 transition-transform" />
 						Restart lab
 					</Button>
 
 					{/* Кнопка HOME (Домой) */}
-					<Link
-						className="group"
-						href="/"
-						color="secondary"
-						variant="outline"
-						size="large"
-					>
+					<Link className="group" href="/" color="secondary" variant="outline" size="large">
 						<FiHome className="w-4 h-4 transition-transform group-hover:-translate-y-0.5" />
 						Retreat to Safety
 					</Link>

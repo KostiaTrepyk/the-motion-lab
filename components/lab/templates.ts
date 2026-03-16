@@ -1,46 +1,56 @@
 import { generateUniqueId } from "@/lib/generateUniqueId";
-import { DefaultModule, Module, MotionModule } from "@/types/modules";
-import { EditorSetting } from "@/types/settings";
+import { BaseModuleTemplate, TemplateSetting } from "@/types/template";
 
-export function generateMotionSettings(): EditorSetting[] {
+export function generateMotionSettings(): TemplateSetting[] {
 	return [
 		{
 			id: generateUniqueId(),
 			type: "slider",
 			label: "Opacity",
 			propertyName: "opacity",
+			isDisabled: false,
+			canBeDisabled: false,
 			value: 0,
 			min: 0,
 			max: 1,
 			markers: [0, 0.25, 0.5, 0.75, 1],
+			isRequired: true,
 		},
 		{
 			id: generateUniqueId(),
 			type: "slider",
 			label: "Scale",
 			propertyName: "scale",
+			isDisabled: false,
+			canBeDisabled: false,
 			value: 1,
 			min: 0,
 			max: 2,
 			markers: [0, 0.5, 1, 1.5, 2],
+			isRequired: true,
 		},
 		{
 			id: generateUniqueId(),
 			type: "slider",
 			label: "Rotate",
 			propertyName: "rotate",
+			isDisabled: false,
+			canBeDisabled: false,
 			value: 0,
 			min: -720,
 			max: 720,
 			step: 5,
 			markers: [-720, -540, -360, -180, 0, 180, 360, 540, 720],
+			isRequired: true,
 		},
 	];
 }
 
-export const defaultModule: DefaultModule = {
+export const defaultModuleTemplate: BaseModuleTemplate = {
+	id: generateUniqueId(),
 	name: "Default",
 	collapsed: false,
+	isRequired: true,
 	settings: [
 		{
 			id: generateUniqueId(),
@@ -48,13 +58,19 @@ export const defaultModule: DefaultModule = {
 			label: "Content",
 			propertyName: "content",
 			value: "Element",
+			canBeDisabled: false,
+			isDisabled: false,
+			isRequired: true,
 		},
 	],
-};
+} as const;
 
-export const motionModule: MotionModule = {
+const motionModuleTemplateId = generateUniqueId();
+export const motionModuleTemplate: BaseModuleTemplate = {
+	id: motionModuleTemplateId,
 	name: "Motion",
 	collapsed: true,
+	isRequired: false,
 	settings: [
 		{
 			id: generateUniqueId(),
@@ -63,7 +79,7 @@ export const motionModule: MotionModule = {
 			propertyName: "initial",
 			collapsed: true,
 			canBeDisabled: true,
-			isDisabled: true,
+			isDisabled: false,
 			settings: generateMotionSettings(),
 		},
 		{
@@ -73,7 +89,7 @@ export const motionModule: MotionModule = {
 			propertyName: "animate",
 			collapsed: true,
 			canBeDisabled: true,
-			isDisabled: true,
+			isDisabled: false,
 			settings: generateMotionSettings(),
 		},
 		{
@@ -83,26 +99,32 @@ export const motionModule: MotionModule = {
 			propertyName: "transition",
 			collapsed: true,
 			canBeDisabled: true,
-			isDisabled: true,
+			isDisabled: false,
 			settings: [
 				{
 					id: generateUniqueId(),
 					type: "slider",
 					label: "Duration",
 					propertyName: "duration",
+					isDisabled: false,
+					canBeDisabled: false,
 					min: 0,
 					max: 1,
 					value: 0.25,
 					step: 0.0125,
 					markers: [0, 0.2, 0.4, 0.6, 0.8, 1],
+					isRequired: true,
 				},
 				{
 					id: generateUniqueId(),
 					type: "select",
 					label: "Type",
 					propertyName: "type",
+					isDisabled: false,
+					canBeDisabled: false,
 					options: ["spring", "tween"],
 					value: "spring",
+					isRequired: true,
 				},
 			],
 		},
@@ -113,17 +135,18 @@ export const motionModule: MotionModule = {
 			propertyName: "whileHover",
 			collapsed: true,
 			canBeDisabled: true,
-			isDisabled: true,
+			isDisabled: false,
 			settings: generateMotionSettings(),
 		},
 		{
 			id: generateUniqueId(),
+
 			type: "object",
 			label: "While tap",
 			propertyName: "whileTap",
 			collapsed: true,
 			canBeDisabled: true,
-			isDisabled: true,
+			isDisabled: false,
 			settings: generateMotionSettings(),
 		},
 		{
@@ -133,7 +156,7 @@ export const motionModule: MotionModule = {
 			propertyName: "whileFocus",
 			collapsed: true,
 			canBeDisabled: true,
-			isDisabled: true,
+			isDisabled: false,
 			settings: generateMotionSettings(),
 		},
 		{
@@ -143,7 +166,7 @@ export const motionModule: MotionModule = {
 			propertyName: "whileInView",
 			collapsed: true,
 			canBeDisabled: true,
-			isDisabled: true,
+			isDisabled: false,
 			settings: generateMotionSettings(),
 		},
 		{
@@ -153,11 +176,10 @@ export const motionModule: MotionModule = {
 			propertyName: "whileDrag",
 			collapsed: true,
 			canBeDisabled: true,
-			isDisabled: true,
+			isDisabled: false,
 			settings: generateMotionSettings(),
 		},
 	],
-};
+} as const;
 
-/** All modules except the default module */
-export const allModules: Module[] = [motionModule];
+export const allTemplates = [defaultModuleTemplate, motionModuleTemplate] as const;

@@ -20,19 +20,13 @@ export function Slider({ setting, changeModuleSetting, ...rest }: SliderProps) {
 				step={setting.step || 0.025}
 				value={setting.value}
 				list={setting.markers ? setting.id + "-markers" : ""}
-				onChange={(e) =>
-					changeModuleSetting(parseFloat(e.target.value))
-				}
+				onChange={(e) => changeModuleSetting(parseFloat(e.target.value))}
 			/>
 
 			{setting.markers && (
 				<datalist id={setting.id + "-markers"}>
 					{setting.markers.map((marker) => (
-						<option
-							key={setting.id + String(marker)}
-							value={marker}
-							label={String(marker)}
-						></option>
+						<option key={setting.id + String(marker)} value={marker} label={String(marker)}></option>
 					))}
 				</datalist>
 			)}

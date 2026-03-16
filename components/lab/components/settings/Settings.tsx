@@ -7,28 +7,16 @@ import { MdDelete } from "react-icons/md";
 import { labContext } from "@/context/lab.context";
 import { useContext } from "react";
 
-export interface SettingsProps extends React.HTMLAttributes<HTMLDivElement> {}
-
-export default function Settings({ ...rest }: SettingsProps) {
-	const {
-		modules,
-		removeModule,
-		changeModuleSetting,
-		toggleSettingDisabled,
-	} = useContext(labContext);
+export default function Settings({ ...rest }: React.HTMLAttributes<HTMLDivElement>) {
+	const { modules, removeModule, changeSettingValue, toggleSettingDisabled, removeSetting } = useContext(labContext);
 
 	return (
-		<div
-			{...rest}
-			className={twMerge(rest.className, "p-4 overflow-y-auto")}
-		>
+		<div {...rest} className={twMerge(rest.className, "p-4 overflow-y-auto")}>
 			<div className="flex flex-col gap-8">
 				{modules.map((module) => (
 					<div key={module.name}>
 						<div className="flex justify-between pb-2">
-							<div className="font-bold text-xl">
-								{module.name}
-							</div>
+							<div className="font-bold text-xl">{module.name}</div>
 
 							{module.name !== "Default" && (
 								<IconButton
@@ -46,8 +34,9 @@ export default function Settings({ ...rest }: SettingsProps) {
 								renderSetting(
 									module,
 									setting,
-									changeModuleSetting,
+									changeSettingValue,
 									toggleSettingDisabled,
+									removeSetting,
 								),
 							)}
 						</div>

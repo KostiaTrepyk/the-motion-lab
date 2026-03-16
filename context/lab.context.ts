@@ -1,26 +1,36 @@
-import { Module } from "@/types/modules";
 import { createContext } from "react";
+import { Module, ModuleName } from "@/types/modules";
+import { NestedSetting, Setting } from "@/types/settings";
+import { TemplateSetting } from "@/types/template";
 
 export interface LabContextType {
 	modules: Module[];
-	addModule: (module: Module) => void;
-	removeModule: (moduleName: string) => void;
-	changeModuleSetting: (
-		moduleName: string,
-		settingId: string,
-		newValue: number | string | boolean,
+	addModuleFromTemplate: (templateId: string) => void;
+	removeModule: (moduleName: ModuleName) => void;
+	findModuleByName: (moduleName: ModuleName) => Module | undefined;
+
+	changeSettingValue: <S extends Exclude<Setting, NestedSetting>>(
+		moduleName: ModuleName,
+		settingId: S["id"],
+		newValue: S["value"],
 	) => void;
-	toggleSettingDisabled: (moduleName: string, settingId: string) => void;
-	findModuleByName: (moduleName: string) => Module | undefined;
+	toggleSettingDisabled: (moduleName: ModuleName, settingId: string) => void;
+	getUnusedTemplateSettings: (templateId: string) => TemplateSetting[] | undefined;
+	addSetting: (templateId: string, templateSettingId: string) => void;
+	removeSetting: (moduleName: ModuleName, settingId: string) => void;
 }
 
 const defaultValue: LabContextType = {
 	modules: [],
-	addModule: () => {},
+	addModuleFromTemplate: () => {},
 	removeModule: () => {},
-	changeModuleSetting: () => {},
-	toggleSettingDisabled: () => {},
 	findModuleByName: () => undefined,
+
+	changeSettingValue: () => {},
+	toggleSettingDisabled: () => {},
+	getUnusedTemplateSettings: () => undefined,
+	addSetting: () => {},
+	removeSetting: () => {},
 };
 
 export const labContext = createContext<LabContextType>(defaultValue);
