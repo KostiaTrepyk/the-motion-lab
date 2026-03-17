@@ -231,15 +231,20 @@ export default function LabProvider({ children }: React.PropsWithChildren) {
 	}, []);
 
 	const removeSettingById = useCallback((moduleName: ModuleName, targetSettingId: string): void => {
-		setModules((prevModules) =>
-			prevModules.map((module) => {
-				if (module.name === moduleName) {
-					return { ...module, settings: helperRemoveSettingById(module.settings, targetSettingId) };
-				}
+		setModules((prevModules) => {
+			const mId = prevModules.findIndex((m) => m.name === moduleName);
+			if (mId === -1) {
+				console.warn(`Module with name ${moduleName} was not found!`);
+				return prevModules;
+			}
 
-				return module;
-			}),
-		);
+			const m = prevModules[mId];
+			const filteredSettings = helperRemoveSettingById(m.settings, targetSettingId);
+
+			if (filteredSettings.isRemoved === false) return prevModules;
+
+			return prevModules.toSpliced(mId, 1, { ...m, settings: filteredSettings.settings });
+		});
 	}, []);
 
 	const contextValue: LabContextType = useMemo(
