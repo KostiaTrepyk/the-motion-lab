@@ -11,13 +11,13 @@ export interface LabContextType {
 
 	changeSettingValue: <S extends Exclude<Setting, NestedSetting>>(
 		moduleName: ModuleName,
-		settingId: S["id"],
+		targetSettingId: S["id"],
 		newValue: S["value"],
 	) => void;
-	toggleSettingDisabled: (moduleName: ModuleName, settingId: string) => void;
+	toggleSettingDisabled: (moduleName: ModuleName, targetSettingId: string) => void;
 	getUnusedTemplateSettings: (templateId: string) => TemplateSetting[] | undefined;
 	addSetting: (templateId: string, templateSettingId: string) => void;
-	removeSetting: (moduleName: ModuleName, settingId: string) => void;
+	removeSettingById: (moduleName: ModuleName, targetSettingId: string) => void;
 }
 
 const defaultValue: LabContextType = {
@@ -30,7 +30,7 @@ const defaultValue: LabContextType = {
 	toggleSettingDisabled: () => {},
 	getUnusedTemplateSettings: () => undefined,
 	addSetting: () => {},
-	removeSetting: () => {},
+	removeSettingById: () => {},
 };
 
 export const labContext = createContext<LabContextType>(defaultValue);

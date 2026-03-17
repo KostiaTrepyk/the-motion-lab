@@ -8,7 +8,7 @@ import { labContext } from "@/context/lab/lab.context";
 import { useContext } from "react";
 
 export default function Settings({ ...rest }: React.HTMLAttributes<HTMLDivElement>) {
-	const { modules, removeModule, changeSettingValue, toggleSettingDisabled, removeSetting } = useContext(labContext);
+	const { modules, removeModule, changeSettingValue, toggleSettingDisabled, removeSettingById: removeSetting } = useContext(labContext);
 
 	return (
 		<div {...rest} className={twMerge(rest.className, "p-4 overflow-y-auto")}>

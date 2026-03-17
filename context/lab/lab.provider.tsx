@@ -10,6 +10,9 @@ import { createModuleFromTemplate } from "./helpers/createModuleFromTemplate";
 import { findTemplateById } from "./helpers/findTemplateById";
 import { updateModuleSettingsFromTemplate } from "./helpers/updateModuleSettingsFromTemplate";
 import { findTemplatePathById } from "./helpers/findTemplatePathById";
+import { getUnmatchedTemplateSettings } from "./helpers/getUnmatchedTemplateSettings";
+import { toggleSettingById } from "./helpers/toggleSettingById";
+import { removeSettingById as helperRemoveSettingById } from "./helpers/removeSettingById";
 
 export default function LabProvider({ children }: React.PropsWithChildren) {
 	const [modules, setModules] = useState<Module[]>(() => {
@@ -144,26 +147,11 @@ export default function LabProvider({ children }: React.PropsWithChildren) {
 		[],
 	);
 
-	const toggleSettingDisabled = useCallback((moduleName: ModuleName, settingId: string): void => {
-		function updateSetting(setting: Setting): Setting {
-			if (setting.id === settingId) {
-				return { ...setting, isDisabled: !setting.isDisabled };
-			}
-
-			if (setting.type === "object") {
-				return {
-					...setting,
-					settings: setting.settings.map(updateSetting),
-				};
-			}
-
-			return setting;
-		}
-
+	const toggleSettingDisabled = useCallback((moduleName: ModuleName, targetSettingId: string): void => {
 		setModules((prevModules) =>
 			prevModules.map((module) => {
 				if (module.name === moduleName) {
-					const updatedSettings = module.settings.map(updateSetting);
+					const updatedSettings = toggleSettingById(module.settings, targetSettingId);
 					return { ...module, settings: updatedSettings };
 				}
 				return module;
@@ -171,18 +159,23 @@ export default function LabProvider({ children }: React.PropsWithChildren) {
 		);
 	}, []);
 
-	// FIX!!! Проверяет только 1 слой параметров, но не проверяет вложенных параметров.
 	const getUnusedTemplateSettings = useCallback(
 		(templateId: string): TemplateSetting[] | undefined => {
 			const template = allTemplates.find((template) => template.id === templateId);
 
-			if (template === undefined) return undefined;
+			if (template === undefined) {
+				console.warn(`Template with id ${templateId} was not found!`);
+				return;
+			}
 
 			const foundModule = findModuleByName(template.name);
 
-			if (foundModule === undefined) return undefined;
+			if (foundModule === undefined) {
+				console.warn(`Module with name ${template.name} doesn't exist!`);
+				return template.settings;
+			}
 
-			return template.settings.filter((ts) => !foundModule.settings.some((ms) => ms.templateSettingId === ts.id));
+			return getUnmatchedTemplateSettings(template.settings, foundModule.settings);
 		},
 		[findModuleByName],
 	);
@@ -237,31 +230,11 @@ export default function LabProvider({ children }: React.PropsWithChildren) {
 		});
 	}, []);
 
-	/* FIX ME!!!! В функции remove внутри removeSetting нет guard против того,
-	 что settings модуля может стать пустым после удаления. Это не баг, просто косметика — UI должен это обрабатывать сам. */
-	const removeSetting = useCallback((moduleName: ModuleName, settingId: string): void => {
-		// Helper
-		function remove(setting: Setting): Setting | null {
-			if (setting.id === settingId && setting.isRequired === false) {
-				return null;
-			}
-
-			if (setting.type === "object") {
-				return {
-					...setting,
-					settings: setting.settings.map(remove).filter((s) => s !== null),
-				};
-			}
-
-			return setting;
-		}
-
+	const removeSettingById = useCallback((moduleName: ModuleName, targetSettingId: string): void => {
 		setModules((prevModules) =>
 			prevModules.map((module) => {
 				if (module.name === moduleName) {
-					const updatedSettings = module.settings.map(remove).filter((s) => s !== null);
-
-					return { ...module, settings: updatedSettings };
+					return { ...module, settings: helperRemoveSettingById(module.settings, targetSettingId) };
 				}
 
 				return module;
@@ -280,7 +253,7 @@ export default function LabProvider({ children }: React.PropsWithChildren) {
 			toggleSettingDisabled,
 			getUnusedTemplateSettings,
 			addSetting,
-			removeSetting,
+			removeSettingById,
 		}),
 		[
 			modules,
@@ -291,7 +264,7 @@ export default function LabProvider({ children }: React.PropsWithChildren) {
 			toggleSettingDisabled,
 			getUnusedTemplateSettings,
 			addSetting,
-			removeSetting,
+			removeSettingById,
 		],
 	);
 

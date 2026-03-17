@@ -12,7 +12,7 @@ export function renderSetting(
 	setting: Setting,
 	changeSettingValue: LabContextType["changeSettingValue"],
 	toggleSettingDisabled: LabContextType["toggleSettingDisabled"],
-	removeSetting: LabContextType["removeSetting"],
+	removeSetting: LabContextType["removeSettingById"],
 ): React.ReactNode {
 	function toggleDisabled() {
 		toggleSettingDisabled(module.name, setting.id);
