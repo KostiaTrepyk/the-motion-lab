@@ -1,16 +1,16 @@
 "use client";
 
-import { useCallback, useContext, useState } from "react";
 import IconButton from "@/components/ui/IconButton";
+import { useAppStore } from "@/store/store";
+import { useCallback, useState } from "react";
 import { FiRefreshCw } from "react-icons/fi";
 import { twMerge } from "tailwind-merge";
 import { generateElementFromModules } from "./generateElementFromModules";
-import { labContext } from "@/context/lab/lab.context";
 
 export default function View({ ...rest }: React.HTMLAttributes<HTMLDivElement>) {
 	const [key, setKey] = useState<number>(1);
 
-	const { modules } = useContext(labContext);
+	const modules = useAppStore((s) => s.modules);
 
 	const refresh = useCallback((): void => {
 		setKey((prev) => prev + 1);

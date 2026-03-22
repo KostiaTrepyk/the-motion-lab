@@ -1,14 +1,15 @@
 "use client";
 
+import IconButton from "@/components/ui/IconButton";
+import { labSliceActions } from "@/store/slices/lab/labActions";
+import { useAppStore } from "@/store/store";
+import { MdDelete } from "react-icons/md";
 import { twMerge } from "tailwind-merge";
 import { renderSetting } from "./renderSetting";
-import IconButton from "@/components/ui/IconButton";
-import { MdDelete } from "react-icons/md";
-import { labContext } from "@/context/lab/lab.context";
-import { useContext } from "react";
 
 export default function Settings({ ...rest }: React.HTMLAttributes<HTMLDivElement>) {
-	const { modules, removeModule, changeSettingValue, toggleSettingDisabled, removeSettingById: removeSetting } = useContext(labContext);
+	const modules = useAppStore((s) => s.modules);
+	const { removeModule, changeSettingValue, toggleSettingDisabled, removeSettingById } = labSliceActions;
 
 	return (
 		<div {...rest} className={twMerge(rest.className, "p-4 overflow-y-auto")}>
@@ -36,7 +37,7 @@ export default function Settings({ ...rest }: React.HTMLAttributes<HTMLDivElemen
 									setting,
 									changeSettingValue,
 									toggleSettingDisabled,
-									removeSetting,
+									removeSettingById,
 								),
 							)}
 						</div>

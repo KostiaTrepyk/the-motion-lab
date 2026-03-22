@@ -1,15 +1,17 @@
 "use client";
 
-import { labContext } from "@/context/lab/lab.context";
-import { useContext } from "react";
-import { twMerge } from "tailwind-merge";
-import IconButton from "@/components/ui/IconButton";
-import { MdAdd } from "react-icons/md";
 import { Collapse } from "@/components/ui/Collapse";
-import { allTemplates } from "../../../../data/templates";
+import IconButton from "@/components/ui/IconButton";
+import { getUnmatchedTemplateSettings } from "@/store/slices/lab/helpers/getUnmatchedTemplateSettings";
+import { allTemplates } from "@/data/templates";
+import { labSliceActions } from "@/store/slices/lab/labActions";
+import { useAppStore } from "@/store/store";
+import { MdAdd } from "react-icons/md";
+import { twMerge } from "tailwind-merge";
 
 export default function Modules({ ...rest }: React.HTMLAttributes<HTMLDivElement>) {
-	const { addModuleFromTemplate, findModuleByName, getUnusedTemplateSettings, addSetting } = useContext(labContext);
+	const modules = useAppStore((s) => s.modules);
+	const { addModuleFromTemplate, addSetting } = labSliceActions;
 
 	return (
 		<div {...rest} className={twMerge(rest.className, "p-4")}>
@@ -18,7 +20,7 @@ export default function Modules({ ...rest }: React.HTMLAttributes<HTMLDivElement
 					<div className="flex justify-between items-center">
 						<div className="text-xl">{template.name}</div>
 
-						{findModuleByName(template.name) === undefined && (
+						{modules.find((m) => m.name === template.name) === undefined && (
 							<IconButton
 								onClick={() => addModuleFromTemplate(template.id)}
 								variant="outline"
@@ -31,7 +33,7 @@ export default function Modules({ ...rest }: React.HTMLAttributes<HTMLDivElement
 
 					{/* Settings */}
 					{(() => {
-						const m = findModuleByName(template.name);
+						const m = modules.find((m) => m.name === template.name);
 
 						if (m === undefined) return null;
 
@@ -42,7 +44,7 @@ export default function Modules({ ...rest }: React.HTMLAttributes<HTMLDivElement
 									className: "flex flex-col gap-2",
 								}}
 							>
-								{getUnusedTemplateSettings(template.id)?.map((templateSetting) => (
+								{getUnmatchedTemplateSettings(template.settings, m.settings)?.map((templateSetting) => (
 									<div key={templateSetting.id} className="flex justify-between items-center">
 										<div>{templateSetting.label}</div>
 

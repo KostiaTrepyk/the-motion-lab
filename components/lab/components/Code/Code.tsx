@@ -1,11 +1,10 @@
 "use client";
 
+import { useAppStore } from "@/store/store";
 import { generateCodeFromModules } from "./generateCodeFromModules";
-import { useContext } from "react";
-import { labContext } from "@/context/lab/lab.context";
 
 export default function Code({ ...rest }: React.HTMLAttributes<HTMLDivElement>) {
-	const { modules } = useContext(labContext);
+	const modules = useAppStore((s) => s.modules);
 
 	return (
 		<div {...rest}>

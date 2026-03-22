@@ -1,10 +1,10 @@
 import { Module } from "@/types/modules";
 import { TemplateSetting } from "@/types/template";
-import { findTemplateById } from "./findTemplateById";
+import { getTemplateById } from "./getTemplateById";
 import { createSettingFromTemplate } from "./createSettingFromTemplate";
 
 export function createModuleFromTemplate(templateId: string): Module | undefined {
-	const template = findTemplateById(templateId);
+	const template = getTemplateById(templateId);
 
 	if (template === undefined) {
 		console.error(`Template with id ${templateId.toString()} was not found!`);

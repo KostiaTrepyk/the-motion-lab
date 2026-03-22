@@ -1,7 +1,6 @@
+import { Metadata } from "next";
 import { Cinzel, Inter } from "next/font/google"; // Импортируем шрифты
 import "./globals.css";
-import { Metadata } from "next";
-import LabProvider from "@/context/lab/lab.provider";
 
 // Шрифт для основного текста
 const inter = Inter({
@@ -23,9 +22,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className={`${inter.variable} ${cinzel.variable} antialiased`}>
-				<LabProvider>{children}</LabProvider>
-			</body>
+			<body className={`${inter.variable} ${cinzel.variable} antialiased`}>{children}</body>
 		</html>
 	);
 }
