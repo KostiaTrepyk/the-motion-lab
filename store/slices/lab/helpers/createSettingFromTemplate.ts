@@ -1,5 +1,5 @@
 import { generateUniqueId } from "@/lib/generateUniqueId";
-import { Setting, BaseSetting } from "@/types/settings";
+import { BaseSetting, Setting } from "@/types/settings";
 import { TemplateSetting } from "@/types/template";
 
 export function createSettingFromTemplate(templateSetting: TemplateSetting): Setting {

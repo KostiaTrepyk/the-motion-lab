@@ -1,7 +1,7 @@
 import { Module } from "@/types/modules";
 import { TemplateSetting } from "@/types/template";
-import { getTemplateById } from "./getTemplateById";
 import { createSettingFromTemplate } from "./createSettingFromTemplate";
+import { getTemplateById } from "./getTemplateById";
 
 export function createModuleFromTemplate(templateId: string): Module | undefined {
 	const template = getTemplateById(templateId);
