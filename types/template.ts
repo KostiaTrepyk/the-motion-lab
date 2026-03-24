@@ -1,6 +1,6 @@
 import { ModuleName } from "./modules";
 
-export interface BaseModuleTemplate {
+export interface ModuleTemplate {
 	id: string;
 	name: ModuleName;
 	/** Для UI, чтобы знать, свернут ли модуль */

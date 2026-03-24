@@ -1,5 +1,5 @@
 import { generateUniqueId } from "@/lib/generateUniqueId";
-import { BaseModuleTemplate, TemplateSetting } from "@/types/template";
+import { ModuleTemplate, TemplateSetting } from "@/types/template";
 
 export function generateMotionSettings(): TemplateSetting[] {
 	return [
@@ -46,7 +46,7 @@ export function generateMotionSettings(): TemplateSetting[] {
 	];
 }
 
-export const defaultModuleTemplate: BaseModuleTemplate = {
+export const defaultModuleTemplate: ModuleTemplate = {
 	id: generateUniqueId(),
 	name: "Default",
 	collapsed: false,
@@ -66,7 +66,7 @@ export const defaultModuleTemplate: BaseModuleTemplate = {
 } as const;
 
 const motionModuleTemplateId = generateUniqueId();
-export const motionModuleTemplate: BaseModuleTemplate = {
+export const motionModuleTemplate: ModuleTemplate = {
 	id: motionModuleTemplateId,
 	name: "Motion",
 	collapsed: true,

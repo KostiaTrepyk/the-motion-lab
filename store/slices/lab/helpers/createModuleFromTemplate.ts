@@ -1,21 +1,17 @@
+import { generateUniqueId } from "@/lib/generateUniqueId";
 import { Module } from "@/types/modules";
-import { TemplateSetting } from "@/types/template";
+import { ModuleTemplate, TemplateSetting } from "@/types/template";
 import { createSettingFromTemplate } from "./createSettingFromTemplate";
-import { getTemplateById } from "./getTemplateById";
 
-export function createModuleFromTemplate(templateId: string): Module | undefined {
-	const template = getTemplateById(templateId);
-
-	if (template === undefined) {
-		console.error(`Template with id ${templateId.toString()} was not found!`);
-		return;
-	}
-
+export function createModuleFromTemplate(template: ModuleTemplate): Module {
 	const requiredTemplateSettings: TemplateSetting[] = template.settings.filter((s) => s.isRequired);
 
 	const newModule: Module = {
+		id: generateUniqueId(),
+		templateId: template.id,
 		name: template.name,
 		collapsed: template.collapsed,
+		isRequired: template.isRequired,
 		settings: requiredTemplateSettings.map(createSettingFromTemplate),
 	};
 

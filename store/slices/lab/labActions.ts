@@ -3,11 +3,25 @@ import { findTemplatePathById } from "@/store/slices/lab/helpers/findTemplatePat
 import { getTemplateById } from "@/store/slices/lab/helpers/getTemplateById";
 import { removeSettingById as helperRemoveSettingById } from "@/store/slices/lab/helpers/removeSettingById";
 import { toggleSettingById } from "@/store/slices/lab/helpers/toggleSettingById";
-import { updateModuleSettingsFromTemplate } from "@/store/slices/lab/helpers/updateModuleSettingsFromTemplate";
+import { addSettingByPath } from "@/store/slices/lab/helpers/addSettingByPath";
 import { useAppStore } from "@/store/store";
 import { Module, ModuleName } from "@/types/modules";
 import { NestedSetting, Setting } from "@/types/settings";
-import { LabSliceActions } from "./labSlice";
+
+export interface LabSliceActions {
+	addModuleFromTemplate: (templateId: string) => void;
+	removeModule: (moduleName: ModuleName) => void;
+	findModuleByName: (moduleName: ModuleName) => Module | undefined;
+
+	changeSettingValue: <S extends Exclude<Setting, NestedSetting>>(
+		moduleName: ModuleName,
+		targetSettingId: S["id"],
+		newValue: S["value"],
+	) => void;
+	toggleSettingDisabled: (moduleName: ModuleName, targetSettingId: string) => void;
+	addSetting: (templateId: string, templateSettingId: string) => void;
+	removeSettingById: (moduleName: ModuleName, targetSettingId: string) => void;
+}
 
 function findModuleByName(moduleName: ModuleName): Module | undefined {
 	return useAppStore.getState().modules.find((module) => module.name === moduleName);
@@ -23,7 +37,7 @@ function addModuleFromTemplate(templateId: string): void {
 
 	const exists = useAppStore.getState().modules.find((m) => m.name === template.name);
 	if (exists === undefined) {
-		const newModule = createModuleFromTemplate(templateId);
+		const newModule = createModuleFromTemplate(template);
 
 		if (newModule === undefined) {
 			console.error("Error occurred in function createModuleFromTemplate. Module was not created!");
@@ -138,7 +152,7 @@ function addSetting(templateId: string, templateSettingId: string): void {
 
 	const path = findTemplatePathById(template.settings, templateSettingId);
 
-	if (path === null) {
+	if (path === undefined) {
 		console.error(`Template setting with id ${templateSettingId.toString()} not found.`);
 		return;
 	}
@@ -148,7 +162,7 @@ function addSetting(templateId: string, templateSettingId: string): void {
 
 		// Если модуля не существует, тогда мы его создаём и добавляем settings по path
 		if (doesModuleExist === undefined) {
-			const newModule = createModuleFromTemplate(templateId);
+			const newModule = createModuleFromTemplate(template);
 
 			if (newModule === undefined) {
 				console.error("Error occurred in function createModuleFromTemplate. Module was not created!");
@@ -160,7 +174,7 @@ function addSetting(templateId: string, templateSettingId: string): void {
 					...draft.modules,
 					{
 						...newModule,
-						settings: updateModuleSettingsFromTemplate(path, template.settings, newModule.settings),
+						settings: addSettingByPath(path, template.settings, newModule.settings),
 					},
 				],
 			};
@@ -172,7 +186,7 @@ function addSetting(templateId: string, templateSettingId: string): void {
 				if (m.name === template.name) {
 					return {
 						...m,
-						settings: updateModuleSettingsFromTemplate(path, template.settings, m.settings),
+						settings: addSettingByPath(path, template.settings, m.settings),
 					};
 				}
 

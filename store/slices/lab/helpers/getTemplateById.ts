@@ -1,6 +1,6 @@
 import { allTemplates } from "@/data/templates";
-import { BaseModuleTemplate } from "@/types/template";
+import { ModuleTemplate } from "@/types/template";
 
-export function getTemplateById(templateId: string): BaseModuleTemplate | undefined {
+export function getTemplateById(templateId: string): ModuleTemplate | undefined {
 	return allTemplates.find((template) => template.id === templateId);
 }

@@ -3,9 +3,12 @@ import { Setting } from "./settings";
 export type ModuleName = "Default" | "Motion";
 
 export interface Module {
+	id: string;
 	name: ModuleName;
 	collapsed: boolean; // Для UI, чтобы знать, свернут ли модуль
 	settings: Setting[];
+	isRequired: boolean;
+	templateId: string;
 }
 
 export interface DefaultModule extends Module {

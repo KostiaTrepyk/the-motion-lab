@@ -2,7 +2,7 @@ import { Setting } from "@/types/settings";
 import { TemplateSetting } from "@/types/template";
 import { createSettingFromTemplate } from "./createSettingFromTemplate";
 
-export function updateModuleSettingsFromTemplate(
+export function addSettingByPath(
 	path: string[],
 	templateSettings: TemplateSetting[],
 	moduleSettings: Setting[],
@@ -29,7 +29,7 @@ export function updateModuleSettingsFromTemplate(
 				...moduleSettings,
 				{
 					...ms,
-					settings: updateModuleSettingsFromTemplate(
+					settings: addSettingByPath(
 						path.toSpliced(0, 1),
 						templateSetting.settings,
 						ms.settings,
@@ -52,7 +52,7 @@ export function updateModuleSettingsFromTemplate(
 			if (setting.id === exists.id) {
 				return {
 					...exists,
-					settings: updateModuleSettingsFromTemplate(
+					settings: addSettingByPath(
 						path.toSpliced(0, 1),
 						templateSetting.settings,
 						exists.settings,
