@@ -1,9 +1,9 @@
+import { addSettingByPath } from "@/store/slices/lab/helpers/addSettingByPath";
 import { createModuleFromTemplate } from "@/store/slices/lab/helpers/createModuleFromTemplate";
 import { findTemplatePathById } from "@/store/slices/lab/helpers/findTemplatePathById";
 import { getTemplateById } from "@/store/slices/lab/helpers/getTemplateById";
 import { removeSettingById as helperRemoveSettingById } from "@/store/slices/lab/helpers/removeSettingById";
 import { toggleSettingById } from "@/store/slices/lab/helpers/toggleSettingById";
-import { addSettingByPath } from "@/store/slices/lab/helpers/addSettingByPath";
 import { useAppStore } from "@/store/store";
 import { Module, ModuleName } from "@/types/modules";
 import { NestedSetting, Setting } from "@/types/settings";
