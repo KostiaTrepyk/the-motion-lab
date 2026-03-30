@@ -1,6 +1,6 @@
 import { allTemplates } from "@/data/templates";
 import { useAppStore } from "@/store/store";
-import { ModuleName } from "@/types/modules";
+import { Module, ModuleName } from "@/types/modules";
 import { labSliceActions } from "./labActions";
 
 // Запоминаем изначальный стейт ПЕРЕД запуском тестов (пока он девственно чист)
@@ -76,6 +76,84 @@ describe("labActions", () => {
 			const newModules = useAppStore.getState().modules;
 			expect(newModules.length).toBe(initialModules.length + 1);
 			expect(newModules.some((m) => m.templateId === template.id)).toBe(true);
+		});
+	});
+
+	describe("removeModule", () => {
+		it("should not change modules if moduleName does not exist", () => {
+			const initialModules = useAppStore.getState().modules;
+
+			const m1: Module = {
+				id: "motion-1",
+				name: "Motion" as ModuleName,
+				collapsed: true,
+				isRequired: false,
+				settings: [],
+				templateId: "temp-1",
+			};
+
+			const m2: Module = {
+				id: "motion-2",
+				name: "Motion2" as ModuleName,
+				collapsed: true,
+				isRequired: true,
+				settings: [],
+				templateId: "temp-2",
+			};
+
+			useAppStore.setState({ modules: [...initialModules, m1, m2] });
+			labSliceActions.removeModule("invalid-module-name" as ModuleName);
+			expect(useAppStore.getState().modules).toEqual([...initialModules, m1, m2]);
+		});
+
+		it("should not remove required modules", () => {
+			const initialModules = useAppStore.getState().modules;
+
+			const m1: Module = {
+				id: "motion-1",
+				name: "Motion" as ModuleName,
+				collapsed: true,
+				isRequired: false,
+				settings: [],
+				templateId: "temp-1",
+			};
+
+			const m2: Module = {
+				id: "motion-2",
+				name: "Motion2" as ModuleName,
+				collapsed: true,
+				isRequired: true,
+				settings: [],
+				templateId: "temp-2",
+			};
+			useAppStore.setState({ modules: [...initialModules, m1, m2] });
+			labSliceActions.removeModule("Motion2" as ModuleName);
+			expect(useAppStore.getState().modules).toEqual([...initialModules, m1, m2]);
+		});
+
+		it("should remove the specified module", () => {
+			const initialModules = useAppStore.getState().modules;
+
+			const m1: Module = {
+				id: "motion-1",
+				name: "Motion1" as ModuleName,
+				collapsed: true,
+				isRequired: false,
+				settings: [],
+				templateId: "temp-1",
+			};
+
+			const m2: Module = {
+				id: "motion-2",
+				name: "Motion2" as ModuleName,
+				collapsed: true,
+				isRequired: true,
+				settings: [],
+				templateId: "temp-2",
+			};
+			useAppStore.setState({ modules: [...initialModules, m1, m2] });
+			labSliceActions.removeModule("Motion1" as ModuleName);
+			expect(useAppStore.getState().modules).toEqual([...initialModules, m2]);
 		});
 	});
 });

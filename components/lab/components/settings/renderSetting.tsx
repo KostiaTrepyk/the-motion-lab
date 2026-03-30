@@ -1,18 +1,18 @@
-import { Slider } from "@/components/ui/Slider";
-import { Setting } from "@/types/settings";
 import { Collapse } from "@/components/ui/Collapse";
 import IconButton from "@/components/ui/IconButton";
-import { LabContextType } from "@/context/lab/lab.context";
+import { Slider } from "@/components/ui/Slider";
+import { LabSliceActions } from "@/store/slices/lab/labActions";
 import { Module } from "@/types/modules";
+import { Setting } from "@/types/settings";
 import { BiShow, BiSolidHide } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
 
 export function renderSetting(
 	module: Module,
 	setting: Setting,
-	changeSettingValue: LabContextType["changeSettingValue"],
-	toggleSettingDisabled: LabContextType["toggleSettingDisabled"],
-	removeSetting: LabContextType["removeSettingById"],
+	changeSettingValue: LabSliceActions["changeSettingValue"],
+	toggleSettingDisabled: LabSliceActions["toggleSettingDisabled"],
+	removeSetting: LabSliceActions["removeSettingById"],
 ): React.ReactNode {
 	function toggleDisabled() {
 		toggleSettingDisabled(module.name, setting.id);

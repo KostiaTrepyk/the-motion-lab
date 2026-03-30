@@ -19,7 +19,7 @@ export default function Settings({ ...rest }: React.HTMLAttributes<HTMLDivElemen
 						<div className="flex justify-between pb-2">
 							<div className="font-bold text-xl">{module.name}</div>
 
-							{module.name !== "Default" && (
+							{module.isRequired === false && (
 								<IconButton
 									color="secondary"
 									variant="outline"

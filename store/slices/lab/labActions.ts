@@ -51,15 +51,21 @@ function addModuleFromTemplate(templateId: string): void {
 }
 
 function removeModule(moduleName: ModuleName) {
-	const exists = useAppStore.getState().modules.findIndex((m) => m.name === moduleName);
+	const modules = useAppStore.getState().modules;
+	const targetId = modules.findIndex((m) => m.name === moduleName);
 
-	if (exists === -1) {
+	if (targetId === -1) {
 		console.warn(`Module with name ${moduleName} doesn't exist.`);
 		return;
 	}
 
+	if (modules[targetId].isRequired) {
+		console.warn(`Module with name ${moduleName} is required and can't be removed.`);
+		return;
+	}
+
 	useAppStore.setState((draft) => {
-		return { modules: draft.modules.toSpliced(exists, 1) };
+		return { modules: draft.modules.toSpliced(targetId, 1) };
 	});
 }
 
