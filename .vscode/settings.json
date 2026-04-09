@@ -1,0 +1,6 @@
+{
+    // EsLint fix при сохранении
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": "explicit"
+	}
+}

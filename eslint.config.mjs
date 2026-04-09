@@ -17,6 +17,13 @@ const eslintConfig = defineConfig([
 		},
 		rules: {
 			"react-compiler/react-compiler": "error",
+			"@typescript-eslint/consistent-type-imports": [
+				"error",
+				{
+					prefer: "type-imports",
+					fixStyle: "inline-type-imports", // Сделает import { type JSX } вместо import type { JSX }
+				},
+			],
 		},
 	},
 
