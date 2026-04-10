@@ -1,9 +1,9 @@
 "use client";
 
+import { Button } from "@/shared/ui/Button";
+import { Link } from "@/shared/ui/Link";
 import { motion } from "motion/react";
 import { FiAlertTriangle, FiHome, FiRefreshCcw } from "react-icons/fi";
-import Button from "@/components/ui/Button";
-import Link from "@/components/ui/Link";
 
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
 	return (

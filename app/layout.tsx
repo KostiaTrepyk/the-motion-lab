@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import { type Metadata } from "next";
 import { Cinzel, Inter } from "next/font/google"; // Импортируем шрифты
 import "./globals.css";
 

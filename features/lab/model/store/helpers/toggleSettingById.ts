@@ -1,0 +1,18 @@
+import type { Setting } from "../../types/setting";
+
+export function toggleSettingById(settings: Setting[], targetSettingId: string): Setting[] {
+	return settings.map((setting) => {
+		if (setting.id === targetSettingId && setting.isRequired === false) {
+			return { ...setting, isDisabled: !setting.isDisabled };
+		}
+
+		if (setting.type === "object") {
+			return {
+				...setting,
+				settings: toggleSettingById(setting.settings, targetSettingId),
+			};
+		}
+
+		return setting;
+	});
+}

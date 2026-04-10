@@ -1,3 +1,4 @@
+import fsdPlugin from "@conarti/eslint-plugin-feature-sliced";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 import reactCompiler from "eslint-plugin-react-compiler";
@@ -14,6 +15,7 @@ const eslintConfig = defineConfig([
 	{
 		plugins: {
 			"react-compiler": reactCompiler,
+			"@conarti/feature-sliced": fsdPlugin,
 		},
 		rules: {
 			"react-compiler/react-compiler": "error",
@@ -24,6 +26,10 @@ const eslintConfig = defineConfig([
 					fixStyle: "inline-type-imports", // Сделает import { type JSX } вместо import type { JSX }
 				},
 			],
+
+			"@conarti/feature-sliced/layers-slices": "error",
+			"@conarti/feature-sliced/absolute-relative": "error",
+			"@conarti/feature-sliced/public-api": "error",
 		},
 	},
 

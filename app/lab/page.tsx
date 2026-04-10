@@ -1,22 +1,29 @@
 "use client";
 
-import dynamic from "next/dynamic";
-
-import Loader from "@/components/ui/Loader";
-
-const Lab = dynamic(() => import("@/components/lab/Lab"), {
-	loading: () => <Loader />,
-
-	// Отключаем SSR (Server Side Rendering) для игры,
-	// так как там сплошной Framer Motion и Drag-n-Drop, которые работают только в браузере.
-	// Это избавит от ошибок "Hydration mismatch".
-	ssr: false,
-});
+import { CodeViewer } from "@/widgets/CodeViewer";
+import { ElementPreview } from "@/widgets/ElementPreview";
+import { ModulesExplorer } from "@/widgets/ModulesExplorer";
+import { SettingsSidebar } from "@/widgets/SettingsSidebar";
+import { motion } from "motion/react";
 
 export default function LabPage() {
 	return (
 		<main>
-			<Lab />
+			<motion.div
+				initial={{ opacity: 0 }}
+				animate={{ opacity: 1 }}
+				transition={{ duration: 0.75 }}
+				className="grid grid-cols-5 h-dvh"
+			>
+				<ModulesExplorer className="border-neutral-900 border-r h-full" />
+
+				<div className="flex flex-col justify-between col-span-3 h-full">
+					<ElementPreview className="grow-5" />
+					<CodeViewer />
+				</div>
+
+				<SettingsSidebar className="border-neutral-900 border-l h-full" />
+			</motion.div>
 		</main>
 	);
 }
