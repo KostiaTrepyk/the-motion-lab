@@ -13,7 +13,7 @@ export const selectUnusedTemplateSettings =
 			return undefined;
 		}
 
-		const foundModule = state.modules.find((module) => module.name === template.name);
+		const foundModule = state.nodes.find((module) => module.name === template.name);
 
 		if (foundModule === undefined) {
 			console.warn(`Module with name ${template.name} doesn't exist!`);

@@ -8,7 +8,7 @@ import prettier from "prettier/standalone";
 import { Suspense, useEffect, useState } from "react";
 
 export function CodeViewer({ ...rest }: React.HTMLAttributes<HTMLDivElement>) {
-	const modules = useLabStore((s) => s.modules);
+	const modules = useLabStore((s) => s.nodes);
 	const [formattedCode, setFormattedCode] = useState<string>("");
 
 	const format = async (unformattedCode: string) => {

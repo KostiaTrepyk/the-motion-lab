@@ -4,5 +4,5 @@ import type { LabStoreState } from "../store";
 export const selectModuleByName =
 	(moduleName: ModuleName) =>
 	(state: LabStoreState): Module | undefined => {
-		return state.modules.find((m) => m.name === moduleName);
+		return state.nodes.find((m) => m.name === moduleName);
 	};

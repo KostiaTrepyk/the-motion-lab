@@ -1,16 +1,16 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useEffect, type JSX } from "react";
-import { createSettings } from "../lib/createSettings";
+import { NodeRenderer } from "../lib/createSettings";
+import { useLabStore } from "../model/store";
 import type { Module } from "../model/types/module";
 
 export interface GenerateElementProps {
 	modules: Module[];
 }
 
-export function GenerateElement({ modules }: GenerateElementProps): JSX.Element {
-	const { isMotionUsed, content, componentAttributes } = createSettings(modules);
+export function GenerateElement(): JSX.Element {
+	const nodes = useLabStore((s) => s.nodes);
 
 	useEffect(() => {
 		// Проверяем, не подгрузили ли мы его уже ранее
@@ -24,9 +24,5 @@ export function GenerateElement({ modules }: GenerateElementProps): JSX.Element 
 		}
 	}, []);
 
-	if (isMotionUsed === true) {
-		return <motion.div {...componentAttributes}>{content}</motion.div>;
-	}
-
-	return <div>{content}</div>;
+	return <NodeRenderer nodes={nodes} />;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { GenerateElement, useLabStore } from "@/features/lab";
+import { GenerateElement } from "@/features/lab";
 import { IconButton } from "@/shared/ui/IconButton";
 import { useState } from "react";
 import { FiRefreshCw } from "react-icons/fi";
@@ -8,8 +8,6 @@ import { twMerge } from "tailwind-merge";
 
 export function ElementPreview({ ...attrs }: React.HTMLAttributes<HTMLDivElement>) {
 	const [key, setKey] = useState<number>(1);
-
-	const modules = useLabStore((s) => s.modules);
 
 	function refresh(): void {
 		setKey((prev) => prev + 1);
@@ -26,7 +24,7 @@ export function ElementPreview({ ...attrs }: React.HTMLAttributes<HTMLDivElement
 			<div className="font-bold text-neutral-400 text-xl text-center">View</div>
 
 			<div className="flex justify-center items-center w-full grow" key={key}>
-				<GenerateElement modules={modules} />
+				<GenerateElement />
 			</div>
 		</div>
 	);

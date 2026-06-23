@@ -1,8 +1,10 @@
 import { type NestedRecord } from "@/shared/types/common";
+import { AnimatePresence, motion } from "framer-motion";
 import HTMLReactParser from "html-react-parser/lib/index";
 import { type MotionNodeAnimationOptions } from "motion";
-import { type JSX } from "react";
+import { Fragment, type JSX } from "react";
 import type { Module } from "../model/types/module";
+import type { CanvasNode } from "../model/types/nodes";
 import type { Setting } from "../model/types/setting";
 
 /** Helper function to convert editor settings to a nested record */
@@ -62,4 +64,42 @@ export function createSettings(modules: Module[]): {
 		}
 	}
 	return { isMotionUsed, content, contentAsString, componentAttributes };
+}
+
+export function NodeRenderer({ nodes }: { nodes: CanvasNode[] }): JSX.Element[] {
+	const result: JSX.Element[] = [];
+
+	for (const node of nodes) {
+		switch (node.type) {
+			case "text":
+				result.push(<Fragment key={node.id}>{node.children}</Fragment>);
+				break;
+			case "div":
+				result.push(
+					<div key={node.id} {...node.props}>
+						<NodeRenderer nodes={node.children} />
+					</div>,
+				);
+				break;
+			case "motion.div":
+				result.push(
+					<motion.div key={node.id} {...node.props}>
+						<NodeRenderer nodes={node.children} />
+					</motion.div>,
+				);
+				break;
+			case "AnimatePresence":
+				result.push(
+					<AnimatePresence key={node.id} {...node.props}>
+						<NodeRenderer nodes={node.children} />
+					</AnimatePresence>,
+				);
+				break;
+			default:
+				const _exhaustiveCheck: never = node;
+				console.error(`Unknown node type: ${_exhaustiveCheck}`);
+		}
+	}
+
+	return result;
 }

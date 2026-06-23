@@ -1,6 +1,8 @@
 // ui
 export { GenerateElement } from "./ui/GenerateElement";
 export { SettingItem } from "./ui/SettingItem";
+export { AddNodePanel } from "./ui/AddNodePanel";
+export { LayerTree } from "./ui/LayerTree";
 
 // Lib
 export { createSettings } from "./lib/createSettings";
