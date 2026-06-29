@@ -1,6 +1,6 @@
 "use client";
 
-import { generateCodeFromModules, useLabStore } from "@/features/lab";
+import { generateCodeFromNodes, useLabStore } from "@/features/lab";
 import * as babelPlugin from "prettier/plugins/babel";
 import * as estreePlugin from "prettier/plugins/estree";
 import * as htmlPlugin from "prettier/plugins/html";
@@ -8,7 +8,7 @@ import prettier from "prettier/standalone";
 import { Suspense, useEffect, useState } from "react";
 
 export function CodeViewer({ ...rest }: React.HTMLAttributes<HTMLDivElement>) {
-	const modules = useLabStore((s) => s.nodes);
+	const nodes = useLabStore((s) => s.nodes);
 	const [formattedCode, setFormattedCode] = useState<string>("");
 
 	const format = async (unformattedCode: string) => {
@@ -30,8 +30,8 @@ export function CodeViewer({ ...rest }: React.HTMLAttributes<HTMLDivElement>) {
 	};
 
 	useEffect(() => {
-		format(generateCodeFromModules(modules)).then(setFormattedCode);
-	}, [modules]);
+		format(generateCodeFromNodes(nodes)).then(setFormattedCode);
+	}, [nodes]);
 
 	return (
 		<div {...rest}>

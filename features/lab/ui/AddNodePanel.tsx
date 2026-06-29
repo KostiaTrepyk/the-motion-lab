@@ -1,5 +1,6 @@
 "use client";
 
+import { generateUniqueId } from "@/lib/generateUniqueId";
 import { labStoreActions, useLabStore } from "../model/store";
 import type { CanvasNode, ElementType } from "../model/types/nodes";
 
@@ -8,7 +9,7 @@ export function AddNodePanel() {
 	const currentNodeId = useLabStore((state) => state.selectedNodeId);
 
 	const handleAddNode = (type: ElementType) => {
-		const id = crypto.randomUUID();
+		const id = generateUniqueId();
 		let newNode: CanvasNode;
 
 		// Фабрика узлов в зависимости от типа
