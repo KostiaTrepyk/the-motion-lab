@@ -5,9 +5,7 @@ export { LayerTree } from "./ui/LayerTree";
 export { SettingItem } from "./ui/SettingItem";
 
 // Lib
-export { createSettings } from "./lib/createSettings";
 export { generateCodeFromNodes } from "./lib/generateCodeFromNodes";
-export { getUnmatchedTemplateSettings } from "./lib/getUnmatchedTemplateSettings";
 
 // Data
 export { allTemplates } from "./model/store/data/templates";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, type JSX } from "react";
-import { NodeRenderer } from "../lib/createSettings";
+import { NodeRenderer } from "../lib/NodeRenderer";
 import { useLabStore } from "../model/store";
 import type { Module } from "../model/types/module";
 
