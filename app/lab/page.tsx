@@ -2,7 +2,7 @@
 
 import { CodeViewer } from "@/widgets/CodeViewer";
 import { ElementPreview } from "@/widgets/ElementPreview";
-import { ModulesExplorer } from "@/widgets/ModulesExplorer";
+import { NodesExplorer } from "@/widgets/NodesExplorer";
 import { SettingsSidebar } from "@/widgets/SettingsSidebar";
 import { motion } from "motion/react";
 
@@ -15,7 +15,7 @@ export default function LabPage() {
 				transition={{ duration: 0.75 }}
 				className="grid grid-cols-5 h-dvh"
 			>
-				<ModulesExplorer className="border-neutral-900 border-r h-full" />
+				<NodesExplorer className="border-neutral-900 border-r h-full" />
 
 				<div className="flex flex-col justify-between col-span-3 h-full">
 					<ElementPreview className="grow-5" />

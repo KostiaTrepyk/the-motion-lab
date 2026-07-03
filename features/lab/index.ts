@@ -2,6 +2,9 @@
 export { AddNodePanel } from "./ui/AddNodePanel";
 export { GenerateElement } from "./ui/GenerateElement";
 export { LayerTree } from "./ui/LayerTree";
+export { DivSettings } from "./ui/node-settings/DivSettings";
+export { MotionDivSettings } from "./ui/node-settings/MotionDivSettings";
+export { TextSettings } from "./ui/node-settings/TextSettings";
 export { SettingItem } from "./ui/SettingItem";
 
 // Lib
