@@ -1,6 +1,6 @@
 "use client";
 
-import { GenerateElement } from "@/features/lab";
+import { GenerateElement } from "@/features/nodes/preview";
 import { IconButton } from "@/shared/ui/IconButton";
 import { useState } from "react";
 import { FiRefreshCw } from "react-icons/fi";

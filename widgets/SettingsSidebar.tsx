@@ -1,7 +1,8 @@
 "use client";
 
-import type { CanvasNode } from "@/features/lab";
-import { DivSettings, MotionDivSettings, TextSettings, useLabStore } from "@/features/lab";
+import type { CanvasNode } from "@/entities/node";
+import { useLabStore } from "@/entities/node";
+import { DivSettings, MotionDivSettings, TextSettings } from "@/features/nodes/edit-node";
 import { twMerge } from "tailwind-merge";
 
 function findSelectedNode(nodes: CanvasNode[], id: string): CanvasNode | null {

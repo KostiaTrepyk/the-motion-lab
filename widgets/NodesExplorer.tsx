@@ -1,4 +1,5 @@
-import { AddNodePanel, LayerTree } from "@/features/lab";
+import { AddNodePanel } from "@/features/nodes/add-node";
+import { LayerTree } from "@/features/nodes/nodes-tree";
 import { twMerge } from "tailwind-merge";
 
 export function NodesExplorer({ ...attrs }: React.HTMLAttributes<HTMLDivElement>) {

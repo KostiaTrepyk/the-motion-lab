@@ -1,6 +1,7 @@
 "use client";
 
-import { generateCodeFromNodes, useLabStore } from "@/features/lab";
+import { useLabStore } from "@/entities/node";
+import { generateCodeFromNodes } from "@/features/nodes/preview";
 import * as babelPlugin from "prettier/plugins/babel";
 import * as estreePlugin from "prettier/plugins/estree";
 import * as htmlPlugin from "prettier/plugins/html";
@@ -37,11 +38,7 @@ export function CodeViewer({ ...rest }: React.HTMLAttributes<HTMLDivElement>) {
 		<div {...rest}>
 			<div className="border-neutral-900 border-t"></div>
 			<Suspense fallback={<div className="p-4">Загрузка...</div>}>
-				<textarea
-					className="p-4 outline-0 w-full h-20dvh"
-					defaultValue={formattedCode}
-					onChange={() => console.error("Not implemented!")}
-				></textarea>
+				<textarea className="p-4 outline-0 w-full h-20dvh" defaultValue={formattedCode} readOnly></textarea>
 			</Suspense>
 		</div>
 	);
