@@ -1,5 +1,3 @@
-import type { SliderSetting } from "@/features/lab";
-
 export interface SliderProps extends Omit<
 	React.HTMLAttributes<HTMLInputElement>,
 	"type" | "name" | "min" | "max" | "step" | "value" | "list" | "onChange"
@@ -8,6 +6,7 @@ export interface SliderProps extends Omit<
 	changeModuleSetting: (value: number) => void;
 }
 
+// FIX ME
 export function Slider({ setting, changeModuleSetting, ...rest }: SliderProps) {
 	return (
 		<>

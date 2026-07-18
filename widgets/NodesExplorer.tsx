@@ -1,14 +1,12 @@
 import { AddNodePanel } from "@/features/nodes/add-node";
 import { LayerTree } from "@/features/nodes/nodes-tree";
-import { twMerge } from "tailwind-merge";
+import { Sidebar } from "@/shared/ui/Sidebar";
 
 export function NodesExplorer({ ...attrs }: React.HTMLAttributes<HTMLDivElement>) {
 	return (
-		<div {...attrs} className={twMerge(attrs.className, "p-4")}>
-			<div className="font-bold text-neutral-400 text-xl text-center">NODES</div>
-
+		<Sidebar title="Nodes" {...attrs}>
 			<AddNodePanel />
 			<LayerTree />
-		</div>
+		</Sidebar>
 	);
 }

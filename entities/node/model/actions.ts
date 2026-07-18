@@ -1,6 +1,19 @@
 import { castDraft, type Draft } from "immer";
+import type { MotionProps } from "motion/react";
 import type { AnimatePresenceNode, CanvasNode, DivNode, MotionDivNode } from "../types/nodes";
 import { useLabStore } from "./store";
+
+export const MOTION_OBJECT_KEYS: ReadonlyArray<keyof MotionProps> = [
+	"initial",
+	"animate",
+	"exit",
+	"transition",
+	"whileHover",
+	"whileTap",
+	"whileFocus",
+	"whileDrag",
+	"whileInView",
+] as const;
 
 // Строгий тип полезной нагрузки для обновления пропсов
 export type UpdatePropsPayload =
@@ -100,13 +113,37 @@ function updateNodeProps(nodeId: string, payload: UpdatePropsPayload): void {
 		const node = findNodeInDraft(state.nodes, nodeId);
 		if (!node) return;
 
-		// Строгий Type Narrowing
 		if (node.type === "div" && payload.type === "div") {
-			node.props = { ...node.props, ...castDraft(payload.props) };
-		} else if (node.type === "motion.div" && payload.type === "motion.div") {
-			node.props = { ...node.props, ...castDraft(payload.props) };
+			Object.assign(node.props, castDraft(payload.props));
 		} else if (node.type === "AnimatePresence" && payload.type === "AnimatePresence") {
-			node.props = { ...node.props, ...castDraft(payload.props) };
+			Object.assign(node.props, castDraft(payload.props));
+		} else if (node.type === "motion.div" && payload.type === "motion.div") {
+			// Создаем поверхностную копию, чтобы можно было безопасно удалять ключи
+			const remainingProps = { ...payload.props };
+
+			// Сначала точечно обновляем motion-свойства
+			MOTION_OBJECT_KEYS.forEach((key) => {
+				// Если свойство есть в payload
+				if (key in remainingProps) {
+					const payloadValue = remainingProps[key];
+
+					if (payloadValue !== undefined && typeof payloadValue === "object") {
+						const existingValue = node.props[key];
+						node.props[key] = {
+							...(typeof existingValue === "object" ? existingValue : {}),
+							...castDraft(payloadValue),
+						};
+					} else if (payloadValue !== undefined) {
+						node.props[key] = castDraft(payloadValue);
+					}
+
+					// Удаляем обработанный ключ из копии
+					delete remainingProps[key];
+				}
+			});
+
+			// Теперь безопасно мержим оставшиеся (обычные) пропсы
+			Object.assign(node.props, castDraft(remainingProps));
 		}
 	});
 }

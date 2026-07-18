@@ -1,48 +1,54 @@
 "use client";
 
-import { useState } from "react";
-import { MdOutlineArrowDropDown } from "react-icons/md";
+import React, { useState } from "react";
+import { FiChevronDown } from "react-icons/fi";
 import { twMerge } from "tailwind-merge";
-import { IconButton } from "./IconButton";
 
-export interface CollapseProps extends React.PropsWithChildren {
-	label: string;
-	isCollapsed?: boolean;
-	containerAttrs?: React.HTMLAttributes<HTMLDivElement>;
-	labelContainerAttrs?: React.HTMLAttributes<HTMLDivElement>;
-	itemsContainerAttrs?: React.HTMLAttributes<HTMLDivElement>;
+export interface CollapseProps extends React.HTMLAttributes<HTMLDivElement> {
+	text: React.ReactNode;
+	defaultOpen?: boolean;
+	classNames?: {
+		trigger?: string;
+		icon?: string;
+		content?: string;
+	};
 }
 
-export function Collapse({
-	label,
-	children,
-	isCollapsed = false,
-	containerAttrs = {},
-	labelContainerAttrs = {},
-	itemsContainerAttrs = {},
-}: CollapseProps) {
-	const [collapsed, setCollapsed] = useState(isCollapsed);
-
-	function toggleCollapse() {
-		setCollapsed((prev) => !prev);
-	}
+export function Collapse({ text, children, defaultOpen = true, className, classNames, ...props }: CollapseProps) {
+	const [isOpen, setIsOpen] = useState(defaultOpen);
 
 	return (
-		<div {...containerAttrs}>
-			<div {...labelContainerAttrs} className={twMerge(labelContainerAttrs.className, "flex justify-between")}>
-				<div className="text-lg">{label}</div>
-
-				<IconButton variant="outline" color="secondary" size="small" onClick={toggleCollapse}>
-					{collapsed ? (
-						<MdOutlineArrowDropDown className="w-full rotate-0 scale-150 transition-[rotate] ease-out" />
-					) : (
-						<MdOutlineArrowDropDown className="w-full rotate-180 scale-150 transition-[rotate] ease-out" />
+		<div className={twMerge("flex flex-col", className)} {...props}>
+			{/* Кнопка-заголовок */}
+			<button
+				type="button"
+				onClick={() => setIsOpen(!isOpen)}
+				className={twMerge(
+					"group flex items-center gap-2 w-full text-left cursor-pointer",
+					classNames?.trigger,
+				)}
+			>
+				<FiChevronDown
+					className={twMerge(
+						"w-4 h-4 transition-transform duration-200 ease-in-out shrink-0",
+						!isOpen && "-rotate-90",
+						classNames?.icon,
 					)}
-				</IconButton>
-			</div>
+				/>
+				{/* Обертка для text на случай, если туда передадут просто строку */}
+				<div className="flex-1">{text}</div>
+			</button>
 
-			<div {...itemsContainerAttrs} className={twMerge(itemsContainerAttrs.className, collapsed ? "hidden" : "")}>
-				{children}
+			{/* Анимируемый контейнер (CSS Grid Hack) */}
+			<div
+				className={twMerge(
+					"grid transition-all duration-300 ease-in-out",
+					isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
+				)}
+			>
+				<div className="overflow-hidden">
+					<div className={twMerge("flex flex-col", classNames?.content)}>{children}</div>
+				</div>
 			</div>
 		</div>
 	);

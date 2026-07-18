@@ -58,7 +58,7 @@ export function LayerTree() {
 	const nodes = useLabStore((state) => state.nodes);
 
 	return (
-		<div className="flex flex-col py-2 border-neutral-800 border-r w-full h-full overflow-y-auto">
+		<div className="flex flex-col py-2 w-full overflow-y-auto">
 			<div className="mb-2 px-4 pb-2 border-neutral-800 border-b font-semibold text-neutral-500 text-xs uppercase tracking-wider">
 				Layers
 			</div>

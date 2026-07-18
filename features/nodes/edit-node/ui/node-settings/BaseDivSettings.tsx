@@ -2,9 +2,8 @@ import type { DivNode, MotionDivNode } from "@/entities/node";
 import { Setting } from "@/shared/ui/settings-layout/Setting";
 import { SettingsList } from "@/shared/ui/settings-layout/SettingsList";
 import { useId } from "react";
-import { GrClear } from "react-icons/gr";
-import { RxTextAlignCenter, RxTextAlignLeft, RxTextAlignRight } from "react-icons/rx";
 import { twMerge } from "tailwind-merge";
+import { ALIGN_ICONS, INPUT_STYLES } from "./consts";
 
 export interface BaseDivSettingsProps {
 	node: DivNode | MotionDivNode;
@@ -20,69 +19,42 @@ export function BaseDivSettings({
 	additionalSettings,
 }: BaseDivSettingsProps) {
 	const activeTextAlign = node.props?.className?.match(/text-(left|center|right)/)?.[0]?.split("-")[1] || "auto";
-
 	const classNameId = useId();
 
 	return (
-		<SettingsList>
+		<SettingsList label="Base Settings">
 			<Setting labelText="Classes (Tailwind)" htmlFor={classNameId}>
 				<textarea
-					className="bg-neutral-900 p-2 border border-neutral-700 focus:border-amber-500 rounded outline-none min-h-20 font-mono text-white text-sm"
+					className={twMerge(INPUT_STYLES, "min-h-20 font-mono resize-y")}
 					value={node.props.className || ""}
 					onChange={handleClassNameChange}
 					id={classNameId}
+					placeholder="p-4 bg-teal-600 rounded-md..."
 				/>
 			</Setting>
 
 			<Setting labelText="Text Alignment">
-				<div className="flex gap-2" role="group" aria-label="Text Alignment">
-					<button
-						className={twMerge(
-							"bg-neutral-500 hover:bg-amber-600 rounded w-8 aspect-square text-black transition-colors duration-300",
-							activeTextAlign === "auto" && "bg-amber-500",
-						)}
-						onClick={() => handleAlignText("clear")}
-						aria-label="Clear alignment"
-						type="button"
-					>
-						<GrClear className="p-1.5 w-full h-full" />
-					</button>
+				<div className="flex gap-2" role="group">
+					{["clear", "left", "center", "right"].map((align) => {
+						const Icon = ALIGN_ICONS[align as keyof typeof ALIGN_ICONS];
+						const isActive = activeTextAlign === (align === "clear" ? "auto" : align);
 
-					<button
-						className={twMerge(
-							"bg-neutral-500 hover:bg-amber-600 rounded w-8 aspect-square text-black transition-colors duration-300",
-							activeTextAlign === "left" && "bg-amber-500",
-						)}
-						onClick={() => handleAlignText("left")}
-						aria-label="Align left"
-						type="button"
-					>
-						<RxTextAlignLeft className="p-1 w-full h-full" />
-					</button>
-
-					<button
-						className={twMerge(
-							"bg-neutral-500 hover:bg-amber-600 rounded w-8 aspect-square text-black transition-colors duration-300",
-							activeTextAlign === "center" && "bg-amber-500",
-						)}
-						onClick={() => handleAlignText("center")}
-						aria-label="Align center"
-						type="button"
-					>
-						<RxTextAlignCenter className="p-1 w-full h-full" />
-					</button>
-
-					<button
-						className={twMerge(
-							"bg-neutral-500 hover:bg-amber-600 rounded w-8 aspect-square text-black transition-colors duration-300",
-							activeTextAlign === "right" && "bg-amber-500",
-						)}
-						onClick={() => handleAlignText("right")}
-						aria-label="Align right"
-						type="button"
-					>
-						<RxTextAlignRight className="p-1 w-full h-full" />
-					</button>
+						return (
+							<button
+								key={align}
+								type="button"
+								onClick={() => handleAlignText(align as "clear" | "left" | "center" | "right")}
+								className={twMerge(
+									"flex justify-center items-center border border-transparent rounded w-8 h-8 transition-all duration-200",
+									isActive
+										? "bg-amber-500/20 text-amber-500 border-amber-500/50"
+										: "bg-neutral-800 text-neutral-400 hover:bg-neutral-700 hover:text-neutral-200",
+								)}
+							>
+								<Icon className="w-4 h-4" />
+							</button>
+						);
+					})}
 				</div>
 			</Setting>
 

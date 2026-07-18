@@ -2,6 +2,7 @@
 
 import { GenerateElement } from "@/features/nodes/preview";
 import { IconButton } from "@/shared/ui/IconButton";
+import { Typography } from "@/shared/ui/Typography";
 import { useState } from "react";
 import { FiRefreshCw } from "react-icons/fi";
 import { twMerge } from "tailwind-merge";
@@ -21,7 +22,9 @@ export function ElementPreview({ ...attrs }: React.HTMLAttributes<HTMLDivElement
 				</IconButton>
 			</div>
 
-			<div className="font-bold text-neutral-400 text-xl text-center">View</div>
+			<Typography type="h2" className="font-bold text-neutral-300 text-xl text-center uppercase tracking-widest">
+				View
+			</Typography>
 
 			<div className="flex justify-center items-center w-full grow" key={key}>
 				<GenerateElement />
