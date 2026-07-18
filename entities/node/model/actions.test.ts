@@ -1,5 +1,6 @@
 import type { CanvasNode, DivNode, MotionDivNode, TextNode } from "../types/nodes";
-import { findNodeById, labStoreActions } from "./actions";
+import { findNodeById } from "../lib/tree";
+import { labStoreActions } from "./actions";
 import { useLabStore } from "./store";
 
 // --- Утилиты для создания тестовых узлов ---
@@ -250,6 +251,76 @@ describe("labStoreActions", () => {
 
 			expect(node.props.animate).toHaveProperty("scale", 0.5);
 			expect(node.props.animate).toHaveProperty("opacity", 1);
+		});
+	});
+
+	describe("moveNode", () => {
+		it("должен перемещать узел перед другим корневым узлом", () => {
+			useLabStore.setState({
+				nodes: [createDivNode("node-1"), createDivNode("node-2")],
+			});
+
+			labStoreActions.moveNode("node-2", "node-1", "before");
+
+			const state = useLabStore.getState();
+			expect(state.nodes.map((n) => n.id)).toEqual(["node-2", "node-1"]);
+		});
+
+		it("должен перемещать узел после другого корневого узла", () => {
+			useLabStore.setState({
+				nodes: [createDivNode("node-1"), createDivNode("node-2")],
+			});
+
+			labStoreActions.moveNode("node-1", "node-2", "after");
+
+			const state = useLabStore.getState();
+			expect(state.nodes.map((n) => n.id)).toEqual(["node-2", "node-1"]);
+		});
+
+		it("должен перемещать узел внутрь контейнера", () => {
+			useLabStore.setState({
+				nodes: [createDivNode("parent"), createTextNode("child")],
+			});
+
+			labStoreActions.moveNode("child", "parent", "inside");
+
+			const state = useLabStore.getState();
+			expect(state.nodes).toHaveLength(1);
+			expect(state.nodes[0].id).toBe("parent");
+			expect((state.nodes[0] as DivNode).children.map((c) => c.id)).toEqual(["child"]);
+		});
+
+		it("не должен позволять перемещать узел в самого себя", () => {
+			useLabStore.setState({
+				nodes: [createDivNode("node-1")],
+			});
+
+			labStoreActions.moveNode("node-1", "node-1", "before");
+
+			const state = useLabStore.getState();
+			expect(state.nodes.map((n) => n.id)).toEqual(["node-1"]);
+		});
+
+		it("не должен позволять перемещать родительский узел внутрь своего потомка (предотвращение цикла)", () => {
+			const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
+			const child = createDivNode("child");
+			const parent = createDivNode("parent", [child]);
+
+			useLabStore.setState({
+				nodes: [parent],
+			});
+
+			labStoreActions.moveNode("parent", "child", "inside");
+
+			const state = useLabStore.getState();
+			// Структура должна остаться неизменной
+			expect(state.nodes).toHaveLength(1);
+			expect(state.nodes[0].id).toBe("parent");
+			expect((state.nodes[0] as DivNode).children).toHaveLength(1);
+			expect((state.nodes[0] as DivNode).children[0].id).toBe("child");
+
+			expect(warnSpy).toHaveBeenCalledWith("Cannot move a parent node into its own descendant.");
+			warnSpy.mockRestore();
 		});
 	});
 });

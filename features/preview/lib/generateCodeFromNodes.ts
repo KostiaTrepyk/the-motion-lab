@@ -1,6 +1,10 @@
 import type { CanvasNode } from "@/entities/node";
 
-export function generateCodeFromNodes(nodes: CanvasNode[]): string {
+export function generateCodeFromNodes(nodes: CanvasNode | CanvasNode[]): string {
+	if (!Array.isArray(nodes)) {
+		nodes = [nodes];
+	}
+
 	return nodes
 		.map((node) => {
 			if (node.type === "text") {

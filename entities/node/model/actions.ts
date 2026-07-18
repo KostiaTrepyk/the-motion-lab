@@ -1,6 +1,7 @@
 import { castDraft, type Draft } from "immer";
 import type { MotionProps } from "motion/react";
 import type { AnimatePresenceNode, CanvasNode, DivNode, MotionDivNode } from "../types/nodes";
+import { isDescendantOf, findNodeInDraft } from "../lib/tree";
 import { useLabStore } from "./store";
 
 export const MOTION_OBJECT_KEYS: ReadonlyArray<keyof MotionProps> = [
@@ -21,34 +22,15 @@ export type UpdatePropsPayload =
 	| { type: "motion.div"; props: Partial<MotionDivNode["props"]> }
 	| { type: "AnimatePresence"; props: Partial<AnimatePresenceNode["props"]> };
 
+export type DropPosition = "before" | "after" | "inside";
+
 export interface LabStoreActions {
 	changeSelectedNode: (newSelectedNodeId: string | null) => void;
 	addNode: (newNode: CanvasNode, parentId?: string | null) => void;
 	removeNode: (nodeId: string) => void;
 	updateNodeContent: (nodeId: string, content: string) => void;
 	updateNodeProps: (nodeId: string, payload: UpdatePropsPayload) => void;
-}
-
-export function findNodeById(nodes: CanvasNode[], nodeId: string): CanvasNode | undefined {
-	for (const node of nodes) {
-		if (node.id === nodeId) return node;
-		if ("children" in node && Array.isArray(node.children)) {
-			const found = findNodeById(node.children, nodeId);
-			if (found) return found;
-		}
-	}
-	return undefined;
-}
-
-function findNodeInDraft(nodes: Draft<CanvasNode[]>, id: string): Draft<CanvasNode> | undefined {
-	for (const node of nodes) {
-		if (node.id === id) return node;
-		if ("children" in node && Array.isArray(node.children)) {
-			const found = findNodeInDraft(node.children, id);
-			if (found) return found;
-		}
-	}
-	return undefined;
+	moveNode: (activeId: string, overId: string, position: DropPosition) => void;
 }
 
 function changeSelectedNode(newSelectedNodeId: string | null): void {
@@ -148,10 +130,71 @@ function updateNodeProps(nodeId: string, payload: UpdatePropsPayload): void {
 	});
 }
 
+function moveNode(activeId: string, overId: string, position: DropPosition): void {
+	useLabStore.setState((state) => {
+		if (activeId === overId) return;
+
+		// Проверка на перемещение родительского узла внутрь собственного потомка
+		if (isDescendantOf(state.nodes as CanvasNode[], activeId, overId)) {
+			console.warn("Cannot move a parent node into its own descendant.");
+			return;
+		}
+
+		let draggedNode: CanvasNode | null = null;
+
+		// 1. Находим и удаляем перетаскиваемый узел
+		function removeDragged(nodes: Draft<CanvasNode[]>): boolean {
+			for (let i = 0; i < nodes.length; i++) {
+				if (nodes[i].id === activeId) {
+					draggedNode = castDraft(nodes[i]) as CanvasNode;
+					nodes.splice(i, 1);
+					return true;
+				}
+				const node = nodes[i];
+				if ("children" in node && Array.isArray(node.children)) {
+					if (removeDragged(node.children)) return true;
+				}
+			}
+			return false;
+		}
+
+		removeDragged(state.nodes);
+
+		if (!draggedNode) return;
+
+		// 2. Находим и вставляем узел на новое место относительно overId
+		function insertDragged(nodes: Draft<CanvasNode[]>): boolean {
+			for (let i = 0; i < nodes.length; i++) {
+				if (nodes[i].id === overId) {
+					const targetNode = nodes[i];
+
+					if (position === "inside" && "children" in targetNode && Array.isArray(targetNode.children)) {
+						targetNode.children.push(castDraft(draggedNode!));
+					} else if (position === "before") {
+						nodes.splice(i, 0, castDraft(draggedNode!));
+					} else {
+						// position === "after"
+						nodes.splice(i + 1, 0, castDraft(draggedNode!));
+					}
+					return true;
+				}
+				const node = nodes[i];
+				if ("children" in node && Array.isArray(node.children)) {
+					if (insertDragged(node.children)) return true;
+				}
+			}
+			return false;
+		}
+
+		insertDragged(state.nodes);
+	});
+}
+
 export const labStoreActions: LabStoreActions = {
 	changeSelectedNode,
 	addNode,
 	removeNode,
 	updateNodeContent,
 	updateNodeProps,
+	moveNode,
 };

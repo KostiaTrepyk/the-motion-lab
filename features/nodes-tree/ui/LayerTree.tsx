@@ -1,6 +1,7 @@
 "use client";
 
 import { labStoreActions, useLabStore, type CanvasNode } from "@/entities/node";
+import { useNodeDnD } from "../lib/useNodeDnD";
 
 interface LayerTreeNodeProps {
 	node: CanvasNode;
@@ -10,6 +11,8 @@ interface LayerTreeNodeProps {
 function LayerTreeNode({ node, depth }: LayerTreeNodeProps) {
 	const selectedNodeId = useLabStore((state) => state.selectedNodeId);
 	const isSelected = selectedNodeId === node.id;
+	
+	const { dropPosition, dragProps } = useNodeDnD({ node });
 
 	const handleClick = (e: React.MouseEvent) => {
 		e.stopPropagation();
@@ -20,18 +23,32 @@ function LayerTreeNode({ node, depth }: LayerTreeNodeProps) {
 	const children: CanvasNode[] = "children" in node && Array.isArray(node.children) ? node.children : [];
 
 	return (
-		<div>
+		<div className="relative">
+			{/* Верхний индикатор (вставка перед узлом) */}
+			{dropPosition === "before" && (
+				<div
+					style={{ marginLeft: `${depth * 12}px` }}
+					className="absolute top-0 left-0 right-0 h-[2px] bg-teal-500 z-10 pointer-events-none"
+				/>
+			)}
+
 			{/* Сама строка элемента */}
 			<div
+				{...dragProps}
 				onClick={handleClick}
 				style={{ paddingLeft: `${depth * 12}px` }}
 				className={`
                     flex items-center py-1.5 px-3 cursor-pointer select-none text-sm border-l-2
-                    hover:bg-neutral-800 transition-colors
+                    hover:bg-neutral-800 transition-colors relative
                     ${
 						isSelected
 							? "bg-teal-900/20 border-teal-500 text-teal-400"
 							: "border-transparent text-neutral-300"
+					}
+					${
+						dropPosition === "inside"
+							? "bg-teal-900/40 border-teal-400"
+							: ""
 					}
                 `}
 			>
@@ -41,6 +58,14 @@ function LayerTreeNode({ node, depth }: LayerTreeNodeProps) {
 				</span>
 				<span className="truncate">{node.name || node.type}</span>
 			</div>
+
+			{/* Нижний индикатор (вставка после узла и всех его детей) */}
+			{dropPosition === "after" && (
+				<div
+					style={{ marginLeft: `${depth * 12}px` }}
+					className="absolute bottom-0 left-0 right-0 h-[2px] bg-teal-500 z-10 pointer-events-none"
+				/>
+			)}
 
 			{/* Рекурсивный рендер дочерних элементов */}
 			{children.length > 0 && (
