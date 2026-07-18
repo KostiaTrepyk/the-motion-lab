@@ -1,6 +1,7 @@
 "use client";
 
 import { labStoreActions, useLabStore, type CanvasNode } from "@/entities/node";
+import { FiEye, FiEyeOff, FiLock, FiUnlock } from "react-icons/fi";
 import { useNodeDnD } from "../lib/useNodeDnD";
 
 interface LayerTreeNodeProps {
@@ -38,13 +39,14 @@ function LayerTreeNode({ node, depth }: LayerTreeNodeProps) {
 				onClick={handleClick}
 				style={{ paddingLeft: `${depth * 12}px` }}
 				className={`
-                    flex items-center py-1.5 px-3 cursor-pointer select-none text-sm border-l-2
+                    group flex items-center py-1.5 px-3 cursor-pointer select-none text-sm border-l-2
                     hover:bg-neutral-800 transition-colors relative
-                    ${
+					${
 						isSelected
 							? "bg-teal-900/20 border-teal-500 text-teal-400"
 							: "border-transparent text-neutral-300"
 					}
+					${node.hidden ? "opacity-50" : "opacity-100"}
 					${
 						dropPosition === "inside"
 							? "bg-teal-900/40 border-teal-400"
@@ -57,6 +59,38 @@ function LayerTreeNode({ node, depth }: LayerTreeNodeProps) {
 					{node.type === "text" ? "T" : "❖"}
 				</span>
 				<span className="truncate">{node.name || node.type}</span>
+
+				{/* Действия (при наведении) */}
+				<div
+					className={`ml-auto flex items-center gap-1.5 transition-opacity ${
+						node.hidden || node.locked ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+					}`}
+				>
+					<button
+						className={`p-0.5 rounded transition-colors ${
+							node.locked ? "text-amber-500 hover:text-amber-400" : "text-neutral-500 hover:text-neutral-300"
+						}`}
+						title={node.locked ? "Unlock" : "Lock"}
+						onClick={(e) => {
+							e.stopPropagation();
+							labStoreActions.toggleLocked(node.id);
+						}}
+					>
+						{node.locked ? <FiLock className="w-3.5 h-3.5" /> : <FiUnlock className="w-3.5 h-3.5" />}
+					</button>
+					<button
+						className={`p-0.5 rounded transition-colors ${
+							node.hidden ? "text-amber-500 hover:text-amber-400" : "text-neutral-500 hover:text-neutral-300"
+						}`}
+						title={node.hidden ? "Show" : "Hide"}
+						onClick={(e) => {
+							e.stopPropagation();
+							labStoreActions.toggleHidden(node.id);
+						}}
+					>
+						{node.hidden ? <FiEyeOff className="w-3.5 h-3.5" /> : <FiEye className="w-3.5 h-3.5" />}
+					</button>
+				</div>
 			</div>
 
 			{/* Нижний индикатор (вставка после узла и всех его детей) */}

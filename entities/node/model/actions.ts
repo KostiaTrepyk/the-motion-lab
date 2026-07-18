@@ -31,6 +31,8 @@ export interface LabStoreActions {
 	updateNodeContent: (nodeId: string, content: string) => void;
 	updateNodeProps: (nodeId: string, payload: UpdatePropsPayload) => void;
 	moveNode: (activeId: string, overId: string, position: DropPosition) => void;
+	toggleHidden: (nodeId: string) => void;
+	toggleLocked: (nodeId: string) => void;
 }
 
 function changeSelectedNode(newSelectedNodeId: string | null): void {
@@ -190,6 +192,33 @@ function moveNode(activeId: string, overId: string, position: DropPosition): voi
 	});
 }
 
+function toggleHidden(nodeId: string): void {
+	useLabStore.setState((state) => {
+		const node = findNodeInDraft(state.nodes, nodeId);
+		if (node) {
+			node.hidden = !node.hidden;
+		}
+	});
+}
+
+function toggleLocked(nodeId: string): void {
+	useLabStore.setState((state) => {
+		const node = findNodeInDraft(state.nodes, nodeId);
+		if (node) {
+			const newLockedState = !node.locked;
+			
+			function setLockedRecursive(n: CanvasNode, locked: boolean) {
+				n.locked = locked;
+				if ("children" in n && Array.isArray(n.children)) {
+					n.children.forEach((child) => setLockedRecursive(child as CanvasNode, locked));
+				}
+			}
+
+			setLockedRecursive(node as CanvasNode, newLockedState);
+		}
+	});
+}
+
 export const labStoreActions: LabStoreActions = {
 	changeSelectedNode,
 	addNode,
@@ -197,4 +226,6 @@ export const labStoreActions: LabStoreActions = {
 	updateNodeContent,
 	updateNodeProps,
 	moveNode,
+	toggleHidden,
+	toggleLocked,
 };

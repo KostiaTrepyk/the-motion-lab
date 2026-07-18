@@ -6,6 +6,8 @@ export function NodeRenderer({ nodes }: { nodes: CanvasNode[] }): JSX.Element[] 
 	const result: JSX.Element[] = [];
 
 	for (const node of nodes) {
+		if (node.hidden) continue;
+
 		switch (node.type) {
 			case "text":
 				result.push(<Fragment key={node.id}>{node.content}</Fragment>);

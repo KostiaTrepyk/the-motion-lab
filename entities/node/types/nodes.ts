@@ -43,6 +43,8 @@ export interface BaseNode {
 	id: string;
 	name: string;
 	type: ElementType;
+	hidden?: boolean;
+	locked?: boolean;
 }
 
 export interface TextNode extends BaseNode {

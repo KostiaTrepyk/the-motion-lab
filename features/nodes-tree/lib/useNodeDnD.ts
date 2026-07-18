@@ -61,7 +61,7 @@ export function useNodeDnD({ node }: UseNodeDnDProps) {
 	return {
 		dropPosition,
 		dragProps: {
-			draggable: true,
+			draggable: !node.locked,
 			onDragStart: handleDragStart,
 			onDragOver: handleDragOver,
 			onDragLeave: handleDragLeave,

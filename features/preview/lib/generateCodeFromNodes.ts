@@ -6,6 +6,7 @@ export function generateCodeFromNodes(nodes: CanvasNode | CanvasNode[]): string 
 	}
 
 	return nodes
+		.filter((node) => !node.hidden)
 		.map((node) => {
 			if (node.type === "text") {
 				return node.content;
