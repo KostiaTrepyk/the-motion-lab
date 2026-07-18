@@ -1,8 +1,7 @@
 "use client";
 
-import { GenerateElement } from "@/features/nodes/preview";
-import { IconButton } from "@/shared/ui/IconButton";
-import { Typography } from "@/shared/ui/Typography";
+import { GenerateElement } from "@/features/preview";
+import { IconButton, Typography } from "@/shared/ui";
 import { useState } from "react";
 import { FiRefreshCw } from "react-icons/fi";
 import { twMerge } from "tailwind-merge";

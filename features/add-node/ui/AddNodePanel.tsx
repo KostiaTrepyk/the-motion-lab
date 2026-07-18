@@ -1,7 +1,7 @@
 "use client";
 
 import { labStoreActions, useLabStore, type CanvasNode, type ElementType } from "@/entities/node";
-import { generateUniqueId } from "@/lib/generateUniqueId";
+import { generateUniqueId } from "@/shared/lib";
 
 export function AddNodePanel() {
 	// Получаем текущий выделенный элемент, чтобы знать, куда вкладывать новый

@@ -1,5 +1,5 @@
 import { labStoreActions, type TextNode } from "@/entities/node";
-import { Setting } from "@/shared/ui/settings-layout/Setting";
+import { Setting } from "@/shared/ui";
 
 export interface TextSettingsProps {
 	node: TextNode;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useLabStore } from "@/entities/node";
-import { generateCodeFromNodes } from "@/features/nodes/preview";
+import { generateCodeFromNodes } from "@/features/preview";
 import * as babelPlugin from "prettier/plugins/babel";
 import * as estreePlugin from "prettier/plugins/estree";
 import * as htmlPlugin from "prettier/plugins/html";

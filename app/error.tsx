@@ -1,7 +1,6 @@
 "use client";
 
-import { Button } from "@/shared/ui/Button";
-import { Link } from "@/shared/ui/Link";
+import { Button, Link } from "@/shared/ui";
 import { motion } from "motion/react";
 import { FiAlertTriangle, FiHome, FiRefreshCcw } from "react-icons/fi";
 

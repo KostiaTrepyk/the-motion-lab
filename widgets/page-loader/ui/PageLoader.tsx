@@ -1,4 +1,4 @@
-export function Loader() {
+export function PageLoader() {
 	return (
 		<div className="flex flex-col justify-center items-center h-screen">
 			<div className="relative flex justify-center items-center mb-8">

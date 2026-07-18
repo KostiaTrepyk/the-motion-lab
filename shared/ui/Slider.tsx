@@ -1,3 +1,5 @@
+export interface SliderSetting { id: string; label: string; min: number; max: number; step?: number; value: number; markers?: number[]; }
+
 export interface SliderProps extends Omit<
 	React.HTMLAttributes<HTMLInputElement>,
 	"type" | "name" | "min" | "max" | "step" | "value" | "list" | "onChange"

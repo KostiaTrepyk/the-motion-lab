@@ -1,5 +1,4 @@
-import { Button } from "@/shared/ui/Button";
-import { Link } from "@/shared/ui/Link";
+import { Button, Link } from "@/shared/ui";
 
 export default function HomePage() {
 	return (

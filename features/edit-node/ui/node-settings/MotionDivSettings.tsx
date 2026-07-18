@@ -1,9 +1,6 @@
 import type { MotionDivNode } from "@/entities/node";
 import { labStoreActions } from "@/entities/node";
-import { NestedSetting } from "@/shared/ui/settings-layout/NestedSetting";
-import { Setting } from "@/shared/ui/settings-layout/Setting";
-import { SettingsList } from "@/shared/ui/settings-layout/SettingsList";
-import { Typography } from "@/shared/ui/Typography";
+import { NestedSetting, Setting, SettingsList, Typography } from "@/shared/ui";
 import type { TargetAndTransition } from "framer-motion";
 import { useNodeStyles } from "../../lib/useNodeStyles";
 import { BaseDivSettings } from "./BaseDivSettings";

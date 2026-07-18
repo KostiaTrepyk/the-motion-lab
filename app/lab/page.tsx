@@ -1,9 +1,9 @@
 "use client";
 
-import { CodeViewer } from "@/widgets/CodeViewer";
-import { ElementPreview } from "@/widgets/ElementPreview";
-import { NodesExplorer } from "@/widgets/NodesExplorer";
-import { SettingsSidebar } from "@/widgets/SettingsSidebar";
+import { CodeViewer } from "@/widgets/code-viewer";
+import { ElementPreview } from "@/widgets/element-preview";
+import { NodesExplorer } from "@/widgets/nodes-explorer";
+import { SettingsSidebar } from "@/widgets/settings-sidebar";
 import { motion } from "motion/react";
 
 export default function LabPage() {

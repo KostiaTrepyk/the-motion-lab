@@ -1,6 +1,5 @@
 import type { DivNode, MotionDivNode } from "@/entities/node";
-import { Setting } from "@/shared/ui/settings-layout/Setting";
-import { SettingsList } from "@/shared/ui/settings-layout/SettingsList";
+import { Setting, SettingsList } from "@/shared/ui";
 import { useId } from "react";
 import { twMerge } from "tailwind-merge";
 import { ALIGN_ICONS, INPUT_STYLES } from "./consts";
