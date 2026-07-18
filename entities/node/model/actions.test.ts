@@ -1,5 +1,5 @@
-import type { CanvasNode, DivNode, MotionDivNode, TextNode } from "../types/nodes";
 import { findNodeById } from "../lib/tree";
+import type { AnimatePresenceNode, CanvasNode, DivNode, MotionDivNode, TextNode } from "../types/nodes";
 import { labStoreActions } from "./actions";
 import { useLabStore } from "./store";
 
@@ -230,7 +230,7 @@ describe("labStoreActions", () => {
 			});
 
 			const state = useLabStore.getState();
-			const node = state.nodes[0];
+			const node = state.nodes[0] as AnimatePresenceNode;
 			expect(node.props.mode).toBe("popLayout");
 		});
 
