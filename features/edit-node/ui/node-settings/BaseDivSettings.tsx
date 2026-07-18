@@ -1,5 +1,5 @@
 import type { DivNode, MotionDivNode } from "@/entities/node";
-import { Setting, SettingsList } from "@/shared/ui";
+import { IconButton, Setting, SettingsList } from "@/shared/ui";
 import { useId } from "react";
 import { twMerge } from "tailwind-merge";
 import { ALIGN_ICONS, INPUT_STYLES } from "./consts";
@@ -39,19 +39,15 @@ export function BaseDivSettings({
 						const isActive = activeTextAlign === (align === "clear" ? "auto" : align);
 
 						return (
-							<button
+							<IconButton
 								key={align}
-								type="button"
 								onClick={() => handleAlignText(align as "clear" | "left" | "center" | "right")}
-								className={twMerge(
-									"flex justify-center items-center border border-transparent rounded w-8 h-8 transition-all duration-200",
-									isActive
-										? "bg-amber-500/20 text-amber-500 border-amber-500/50"
-										: "bg-neutral-800 text-neutral-400 hover:bg-neutral-700 hover:text-neutral-200",
-								)}
+								color={isActive ? "primary" : "ghost"}
+								variant={isActive ? "filled" : "ghost"}
+								className="rounded-md"
 							>
 								<Icon className="w-4 h-4" />
-							</button>
+							</IconButton>
 						);
 					})}
 				</div>
