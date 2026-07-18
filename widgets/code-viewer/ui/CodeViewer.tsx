@@ -1,41 +1,16 @@
 "use client";
 
 import { useLabStore } from "@/entities/node";
-import { generateCodeFromNodes } from "@/features/preview";
+import { generateCodeFromNodes, useFormattedCode } from "@/features/preview";
 import { IconButton } from "@/shared/ui";
-import * as babelPlugin from "prettier/plugins/babel";
-import * as estreePlugin from "prettier/plugins/estree";
-import * as htmlPlugin from "prettier/plugins/html";
-import prettier from "prettier/standalone";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useState } from "react";
 import { FiCheck, FiCopy } from "react-icons/fi";
 
 export function CodeViewer({ ...rest }: React.HTMLAttributes<HTMLDivElement>) {
 	const nodes = useLabStore((s) => s.nodes);
-	const [formattedCode, setFormattedCode] = useState<string>("");
+	const rawCode = generateCodeFromNodes(nodes);
+	const formattedCode = useFormattedCode(rawCode);
 	const [copied, setCopied] = useState(false);
-
-	const format = async (unformattedCode: string) => {
-		try {
-			const formatted = await prettier.format(unformattedCode, {
-				parser: "babel",
-				plugins: [babelPlugin, estreePlugin, htmlPlugin],
-				printWidth: 80,
-				tabWidth: 4,
-				semi: true,
-				singleQuote: false,
-			});
-			return formatted;
-		} catch (error) {
-			console.warn("Ошибка форматирования (возможно, синтаксическая ошибка в коде):", error);
-			// Если код сломан, возвращаем как было, чтобы не стереть текст пользователя
-			return unformattedCode;
-		}
-	};
-
-	useEffect(() => {
-		format(generateCodeFromNodes(nodes)).then(setFormattedCode);
-	}, [nodes]);
 
 	const handleCopy = () => {
 		navigator.clipboard.writeText(formattedCode);
@@ -51,7 +26,7 @@ export function CodeViewer({ ...rest }: React.HTMLAttributes<HTMLDivElement>) {
 				variant="ghost"
 				onClick={handleCopy}
 				title="Copy to clipboard"
-				className="absolute top-4 right-4 z-10"
+				className="top-4 right-4 z-10 absolute"
 			>
 				{copied ? <FiCheck className="text-green-500" /> : <FiCopy />}
 			</IconButton>
