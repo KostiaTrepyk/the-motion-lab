@@ -1,4 +1,4 @@
-import type { CanvasNode } from "@/entities/node";
+import { labStoreActions, type CanvasNode } from "@/entities/node";
 import { AnimatePresence, motion } from "framer-motion";
 import { Fragment, type JSX } from "react";
 
@@ -14,14 +14,34 @@ export function NodeRenderer({ nodes }: { nodes: CanvasNode[] }): JSX.Element[] 
 				break;
 			case "div":
 				result.push(
-					<div key={node.id} {...node.props}>
+					<div
+						key={node.id}
+						{...node.props}
+						onClick={(e) => {
+							e.stopPropagation();
+							labStoreActions.changeSelectedNode(node.id);
+							if (node.props && "onClick" in node.props && typeof node.props.onClick === "function") {
+								node.props.onClick(e);
+							}
+						}}
+					>
 						<NodeRenderer nodes={node.children} />
 					</div>,
 				);
 				break;
 			case "motion.div":
 				result.push(
-					<motion.div key={node.id} {...node.props}>
+					<motion.div
+						key={node.id}
+						{...node.props}
+						onClick={(e) => {
+							e.stopPropagation();
+							labStoreActions.changeSelectedNode(node.id);
+							if (node.props && "onClick" in node.props && typeof node.props.onClick === "function") {
+								node.props.onClick(e);
+							}
+						}}
+					>
 						<NodeRenderer nodes={node.children} />
 					</motion.div>,
 				);
