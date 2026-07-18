@@ -1,6 +1,7 @@
 "use client";
 
 import { labStoreActions, useLabStore, type CanvasNode } from "@/entities/node";
+import { IconButton } from "@/shared/ui";
 import { FiEye, FiEyeOff, FiLock, FiUnlock } from "react-icons/fi";
 import { useNodeDnD } from "../lib/useNodeDnD";
 
@@ -12,7 +13,7 @@ interface LayerTreeNodeProps {
 function LayerTreeNode({ node, depth }: LayerTreeNodeProps) {
 	const selectedNodeId = useLabStore((state) => state.selectedNodeId);
 	const isSelected = selectedNodeId === node.id;
-	
+
 	const { dropPosition, dragProps } = useNodeDnD({ node });
 
 	const handleClick = (e: React.MouseEvent) => {
@@ -41,17 +42,9 @@ function LayerTreeNode({ node, depth }: LayerTreeNodeProps) {
 				className={`
                     group flex items-center py-1.5 px-3 cursor-pointer select-none text-sm border-l-2
                     hover:bg-neutral-800 transition-colors relative
-					${
-						isSelected
-							? "bg-teal-900/20 border-teal-500 text-teal-400"
-							: "border-transparent text-neutral-300"
-					}
+					${isSelected ? "bg-teal-900/20 border-teal-500 text-teal-400" : "border-transparent text-neutral-300"}
 					${node.hidden ? "opacity-50" : "opacity-100"}
-					${
-						dropPosition === "inside"
-							? "bg-teal-900/40 border-teal-400"
-							: ""
-					}
+					${dropPosition === "inside" ? "bg-teal-900/40 border-teal-400" : ""}
                 `}
 			>
 				{/* Примитивная индикация типа узла */}
@@ -66,10 +59,10 @@ function LayerTreeNode({ node, depth }: LayerTreeNodeProps) {
 						node.hidden || node.locked ? "opacity-100" : "opacity-0 group-hover:opacity-100"
 					}`}
 				>
-					<button
-						className={`p-0.5 rounded transition-colors ${
-							node.locked ? "text-amber-500 hover:text-amber-400" : "text-neutral-500 hover:text-neutral-300"
-						}`}
+					<IconButton
+						className="rounded-md"
+						variant="ghost"
+						color={node.locked ? "primary" : "secondary"}
 						title={node.locked ? "Unlock" : "Lock"}
 						onClick={(e) => {
 							e.stopPropagation();
@@ -77,11 +70,12 @@ function LayerTreeNode({ node, depth }: LayerTreeNodeProps) {
 						}}
 					>
 						{node.locked ? <FiLock className="w-3.5 h-3.5" /> : <FiUnlock className="w-3.5 h-3.5" />}
-					</button>
-					<button
-						className={`p-0.5 rounded transition-colors ${
-							node.hidden ? "text-amber-500 hover:text-amber-400" : "text-neutral-500 hover:text-neutral-300"
-						}`}
+					</IconButton>
+
+					<IconButton
+						className="rounded-md"
+						variant="ghost"
+						color={node.hidden ? "primary" : "secondary"}
 						title={node.hidden ? "Show" : "Hide"}
 						onClick={(e) => {
 							e.stopPropagation();
@@ -89,7 +83,7 @@ function LayerTreeNode({ node, depth }: LayerTreeNodeProps) {
 						}}
 					>
 						{node.hidden ? <FiEyeOff className="w-3.5 h-3.5" /> : <FiEye className="w-3.5 h-3.5" />}
-					</button>
+					</IconButton>
 				</div>
 			</div>
 

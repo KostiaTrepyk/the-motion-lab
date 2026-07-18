@@ -2,6 +2,7 @@
 
 import { labStoreActions, useLabStore, type CanvasNode, type ElementType } from "@/entities/node";
 import { generateUniqueId } from "@/shared/lib";
+import { Button } from "@/shared/ui";
 
 export function AddNodePanel() {
 	// Получаем текущий выделенный элемент, чтобы знать, куда вкладывать новый
@@ -67,30 +68,28 @@ export function AddNodePanel() {
 
 	return (
 		<div className="flex flex-wrap gap-2 p-2 border-neutral-800 border-b">
-			<button
-				onClick={() => handleAddNode("div")}
-				className="bg-neutral-800 hover:bg-neutral-700 px-3 py-1 rounded text-neutral-300 text-xs transition-colors"
-			>
+			<Button className="bg-neutral-800 hover:bg-neutral-700" size="small" onClick={() => handleAddNode("div")}>
 				+ Div
-			</button>
-			<button
+			</Button>
+			<Button
+				className="bg-teal-900/40 hover:bg-teal-900/60 border-teal-800 hover:border-teal-700 text-teal-400"
+				variant="outline"
+				size="small"
 				onClick={() => handleAddNode("motion.div")}
-				className="bg-teal-900/40 hover:bg-teal-900/60 px-3 py-1 border border-teal-800 rounded text-teal-400 text-xs transition-colors"
 			>
 				+ Motion Div
-			</button>
-			<button
+			</Button>
+			<Button
+				className="bg-purple-900/40 hover:bg-purple-900/60 border-purple-800 hover:border-purple-700 text-purple-400"
+				variant="outline"
+				size="small"
 				onClick={() => handleAddNode("AnimatePresence")}
-				className="bg-purple-900/40 hover:bg-purple-900/60 px-3 py-1 border border-purple-800 rounded text-purple-400 text-xs transition-colors"
 			>
 				+ AnimatePresence
-			</button>
-			<button
-				onClick={() => handleAddNode("text")}
-				className="bg-neutral-800 hover:bg-neutral-700 px-3 py-1 rounded text-neutral-300 text-xs transition-colors"
-			>
+			</Button>
+			<Button className="bg-neutral-800 hover:bg-neutral-700" size="small" onClick={() => handleAddNode("text")}>
 				+ Text
-			</button>
+			</Button>
 		</div>
 	);
 }

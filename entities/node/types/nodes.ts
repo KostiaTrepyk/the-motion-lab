@@ -66,7 +66,7 @@ export interface AnimatePresenceNode extends BaseNode {
 
 export interface MotionDivNode extends BaseNode {
 	type: "motion.div";
-	props: 	MotionProps & React.HTMLAttributes<HTMLDivElement>;
+	props: MotionProps & React.HTMLAttributes<HTMLDivElement>;
 	children: CanvasNode[];
 }
 

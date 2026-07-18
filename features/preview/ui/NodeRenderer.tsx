@@ -1,9 +1,17 @@
-import { labStoreActions, type CanvasNode } from "@/entities/node";
+import { labStoreActions, type CanvasNode, type DivNode, type MotionDivNode } from "@/entities/node";
 import { AnimatePresence, motion } from "framer-motion";
 import { Fragment, type JSX } from "react";
 
 export function NodeRenderer({ nodes }: { nodes: CanvasNode[] }): JSX.Element[] {
 	const result: JSX.Element[] = [];
+
+	function selectNode(node: DivNode | MotionDivNode, e: React.MouseEvent<HTMLDivElement>) {
+		e.stopPropagation();
+		labStoreActions.changeSelectedNode(node.id);
+		if (node.props && "onClick" in node.props && typeof node.props.onClick === "function") {
+			node.props.onClick(e);
+		}
+	}
 
 	for (const node of nodes) {
 		if (node.hidden) continue;
@@ -19,10 +27,7 @@ export function NodeRenderer({ nodes }: { nodes: CanvasNode[] }): JSX.Element[] 
 						{...node.props}
 						onClick={(e) => {
 							e.stopPropagation();
-							labStoreActions.changeSelectedNode(node.id);
-							if (node.props && "onClick" in node.props && typeof node.props.onClick === "function") {
-								node.props.onClick(e);
-							}
+							selectNode(node, e);
 						}}
 					>
 						<NodeRenderer nodes={node.children} />
@@ -36,10 +41,7 @@ export function NodeRenderer({ nodes }: { nodes: CanvasNode[] }): JSX.Element[] 
 						{...node.props}
 						onClick={(e) => {
 							e.stopPropagation();
-							labStoreActions.changeSelectedNode(node.id);
-							if (node.props && "onClick" in node.props && typeof node.props.onClick === "function") {
-								node.props.onClick(e);
-							}
+							selectNode(node, e);
 						}}
 					>
 						<NodeRenderer nodes={node.children} />
