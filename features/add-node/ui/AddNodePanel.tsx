@@ -10,35 +10,22 @@ export function AddNodePanel() {
 
 	return (
 		<div className="flex flex-wrap gap-2 p-2 border-neutral-800 border-b">
-			<Button
-				className="bg-neutral-800 hover:bg-neutral-700"
-				size="small"
-				onClick={() => handleAddNode("div", currentNodeId)}
-			>
+			<Button variant="soft" color="secondary" size="small" onClick={() => handleAddNode("text", currentNodeId)}>
+				+ Text
+			</Button>
+			<Button variant="soft" size="small" onClick={() => handleAddNode("div", currentNodeId)} color="secondary">
 				+ Div
 			</Button>
-			<Button
-				className="bg-teal-900/40 hover:bg-teal-900/60 border-teal-800 hover:border-teal-700 text-teal-400"
-				variant="outline"
-				size="small"
-				onClick={() => handleAddNode("motion.div", currentNodeId)}
-			>
+			<Button variant="soft" color="teal" size="small" onClick={() => handleAddNode("motion.div", currentNodeId)}>
 				+ Motion Div
 			</Button>
 			<Button
-				className="bg-purple-900/40 hover:bg-purple-900/60 border-purple-800 hover:border-purple-700 text-purple-400"
-				variant="outline"
+				variant="soft"
+				color="purple"
 				size="small"
 				onClick={() => handleAddNode("AnimatePresence", currentNodeId)}
 			>
 				+ AnimatePresence
-			</Button>
-			<Button
-				className="bg-neutral-800 hover:bg-neutral-700"
-				size="small"
-				onClick={() => handleAddNode("text", currentNodeId)}
-			>
-				+ Text
 			</Button>
 		</div>
 	);

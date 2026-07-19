@@ -1,7 +1,7 @@
 "use client";
 
-import { useLabStore } from "@/entities/node";
-import { generateCodeFromNodes, useFormattedCode } from "@/features/preview";
+import { generateCodeFromNodes, useLabStore } from "@/entities/node";
+import { useFormattedCode } from "@/features/preview";
 import { IconButton } from "@/shared/ui";
 import { Suspense, useState } from "react";
 import { FiCheck, FiCopy } from "react-icons/fi";

@@ -1,4 +1,4 @@
-import type { CanvasNode } from "@/entities/node";
+import type { CanvasNode } from "../types/nodes";
 
 export function generateCodeFromNodes(nodes: CanvasNode | CanvasNode[]): string {
 	if (!Array.isArray(nodes)) {

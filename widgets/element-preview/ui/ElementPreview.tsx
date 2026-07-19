@@ -1,5 +1,6 @@
 "use client";
 
+import { ExportButton } from "@/features/export-code";
 import { GenerateElement } from "@/features/preview";
 import { IconButton, Typography } from "@/shared/ui";
 import { useState } from "react";
@@ -15,17 +16,22 @@ export function ElementPreview({ ...attrs }: React.HTMLAttributes<HTMLDivElement
 
 	return (
 		<div {...attrs} className={twMerge(attrs.className, "flex flex-col p-4")}>
-			<div className="h-8">
-				<IconButton className="group" onClick={refresh}>
+			<div className="flex justify-between items-center h-8">
+				<IconButton className="group" onClick={refresh} title="Обновить превью" variant="ghost" color="ghost">
 					<FiRefreshCw className="w-full h-full group-active:rotate-180 transition-[rotate] duration-200" />
 				</IconButton>
+
+				<ExportButton />
 			</div>
 
-			<Typography type="h2" className="font-bold text-neutral-300 text-xl text-center uppercase tracking-widest">
+			<Typography
+				type="h2"
+				className="mt-4 font-bold text-neutral-300 text-xl text-center uppercase tracking-widest"
+			>
 				View
 			</Typography>
 
-			<div className="flex justify-center items-center w-full grow" key={key}>
+			<div className="flex justify-center items-center mt-4 w-full grow" key={key}>
 				<GenerateElement />
 			</div>
 		</div>
