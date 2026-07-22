@@ -4,6 +4,7 @@ export { IconButton } from "./IconButton";
 export { Link } from "./Link";
 export { Sidebar } from "./Sidebar";
 export { Slider } from "./Slider";
+export { Tabs } from "./Tabs";
 export { Typography } from "./Typography";
 export { NestedSetting } from "./settings-layout/NestedSetting";
 export { Setting } from "./settings-layout/Setting";

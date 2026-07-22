@@ -15,7 +15,7 @@ export async function formatCode(nodes: CanvasNode[] | CanvasNode): Promise<stri
 			semi: true,
 			singleQuote: false,
 		});
-	} catch (e) {
+	} catch {
 		return rawCode;
 	}
 }

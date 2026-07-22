@@ -252,6 +252,24 @@ describe("labStoreActions", () => {
 			expect(node.props.animate).toHaveProperty("scale", 0.5);
 			expect(node.props.animate).toHaveProperty("opacity", 1);
 		});
+
+		it("должен полностью удалять свойство при передаче undefined", () => {
+			const motionNode = createMotionNode("motion-1");
+			motionNode.props.initial = { opacity: 0 };
+			motionNode.props.whileHover = { scale: 1.1 };
+			useLabStore.setState({ nodes: [motionNode] });
+
+			labStoreActions.updateNodeProps("motion-1", {
+				type: "motion.div",
+				props: { initial: undefined, whileHover: undefined },
+			});
+
+			const state = useLabStore.getState();
+			const node = state.nodes[0] as MotionDivNode;
+
+			expect(node.props).not.toHaveProperty("initial");
+			expect(node.props).not.toHaveProperty("whileHover");
+		});
 	});
 
 	describe("moveNode", () => {

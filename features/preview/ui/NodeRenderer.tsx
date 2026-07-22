@@ -20,6 +20,7 @@ export function NodeRenderer({ nodes }: { nodes: CanvasNode[] }): JSX.Element[] 
 			case "text":
 				result.push(<Fragment key={node.id}>{node.content}</Fragment>);
 				break;
+
 			case "div":
 				result.push(
 					<div
@@ -34,6 +35,7 @@ export function NodeRenderer({ nodes }: { nodes: CanvasNode[] }): JSX.Element[] 
 					</div>,
 				);
 				break;
+
 			case "motion.div":
 				result.push(
 					<motion.div
@@ -48,6 +50,7 @@ export function NodeRenderer({ nodes }: { nodes: CanvasNode[] }): JSX.Element[] 
 					</motion.div>,
 				);
 				break;
+
 			case "AnimatePresence":
 				result.push(
 					<AnimatePresence key={node.id} {...node.props}>
@@ -55,6 +58,7 @@ export function NodeRenderer({ nodes }: { nodes: CanvasNode[] }): JSX.Element[] 
 					</AnimatePresence>,
 				);
 				break;
+
 			default:
 				const _exhaustiveCheck: never = node;
 				console.error(`Unknown node type: ${_exhaustiveCheck}`);

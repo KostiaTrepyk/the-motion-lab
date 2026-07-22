@@ -111,13 +111,15 @@ function updateNodeProps(nodeId: string, payload: UpdatePropsPayload): void {
 				if (key in remainingProps) {
 					const payloadValue = remainingProps[key];
 
-					if (payloadValue !== undefined && typeof payloadValue === "object") {
+					if (payloadValue === undefined || payloadValue === null) {
+						delete node.props[key];
+					} else if (typeof payloadValue === "object") {
 						const existingValue = node.props[key];
 						node.props[key] = {
 							...(typeof existingValue === "object" ? existingValue : {}),
 							...castDraft(payloadValue),
 						};
-					} else if (payloadValue !== undefined) {
+					} else {
 						node.props[key] = castDraft(payloadValue);
 					}
 
