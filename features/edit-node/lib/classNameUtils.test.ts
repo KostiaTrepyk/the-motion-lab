@@ -1,4 +1,4 @@
-import { findClassWithPrefix, updateClassPrefix } from "./classNameUtils";
+import { clearClassPrefixes, findClassWithPrefix, updateClassPrefix } from "./classNameUtils";
 
 describe("classNameUtils", () => {
 	describe("findClassWithPrefix", () => {
@@ -28,6 +28,13 @@ describe("classNameUtils", () => {
 		it("должен удалять класс с префиксом, если newValue пустой", () => {
 			const result = updateClassPrefix("p-4 w-32 bg-slate-800", "w", "");
 			expect(result).toBe("p-4 bg-slate-800");
+		});
+	});
+
+	describe("clearClassPrefixes", () => {
+		it("должен удалять все классы с переданными префиксами", () => {
+			const result = clearClassPrefixes("pt-4 pr-2 pb-1 pl-3 bg-slate-800 p-4", ["pt", "pr", "pb", "pl"]);
+			expect(result).toBe("bg-slate-800 p-4");
 		});
 	});
 });

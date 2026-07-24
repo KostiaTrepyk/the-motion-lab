@@ -1,7 +1,6 @@
 "use client";
 
-import { Setting, Typography } from "@/shared/ui";
-import { INPUT_STYLES } from "./consts";
+import { Input, Setting } from "@/shared/ui";
 
 export interface SpringConfig {
 	stiffness?: number;
@@ -35,11 +34,11 @@ export function SpringControls({ config, onChange }: SpringControlsProps) {
 						onChange={(e) => onChange({ ...config, stiffness: parseFloat(e.target.value) || 100 })}
 						className="flex-1 bg-neutral-800 rounded-lg h-1.5 accent-amber-500 appearance-none cursor-pointer"
 					/>
-					<input
+					<Input
 						type="number"
 						value={stiffness}
 						onChange={(e) => onChange({ ...config, stiffness: parseFloat(e.target.value) || 100 })}
-						className={`${INPUT_STYLES} w-16 text-center`}
+						className="w-16 text-center"
 					/>
 				</div>
 			</Setting>
@@ -56,11 +55,11 @@ export function SpringControls({ config, onChange }: SpringControlsProps) {
 						onChange={(e) => onChange({ ...config, damping: parseFloat(e.target.value) || 0 })}
 						className="flex-1 bg-neutral-800 rounded-lg h-1.5 accent-amber-500 appearance-none cursor-pointer"
 					/>
-					<input
+					<Input
 						type="number"
 						value={damping}
 						onChange={(e) => onChange({ ...config, damping: parseFloat(e.target.value) || 0 })}
-						className={`${INPUT_STYLES} w-16 text-center`}
+						className="w-16 text-center"
 					/>
 				</div>
 			</Setting>
@@ -77,12 +76,12 @@ export function SpringControls({ config, onChange }: SpringControlsProps) {
 						onChange={(e) => onChange({ ...config, mass: parseFloat(e.target.value) || 1 })}
 						className="flex-1 bg-neutral-800 rounded-lg h-1.5 accent-amber-500 appearance-none cursor-pointer"
 					/>
-					<input
+					<Input
 						type="number"
 						step="0.1"
 						value={mass}
 						onChange={(e) => onChange({ ...config, mass: parseFloat(e.target.value) || 1 })}
-						className={`${INPUT_STYLES} w-16 text-center`}
+						className="w-16 text-center"
 					/>
 				</div>
 			</Setting>
@@ -99,9 +98,13 @@ export function SpringControls({ config, onChange }: SpringControlsProps) {
 						onChange={(e) => onChange({ ...config, bounce: parseFloat(e.target.value) || 0 })}
 						className="flex-1 bg-neutral-800 rounded-lg h-1.5 accent-amber-500 appearance-none cursor-pointer"
 					/>
-					<Typography type="mono" className="w-12 text-neutral-400 text-xs text-right">
-						{bounce}
-					</Typography>
+					<Input
+						type="number"
+						step="0.05"
+						value={bounce}
+						onChange={(e) => onChange({ ...config, bounce: parseFloat(e.target.value) || 0 })}
+						className="w-16 text-center"
+					/>
 				</div>
 			</Setting>
 		</div>

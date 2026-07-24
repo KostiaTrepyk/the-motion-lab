@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { twMerge } from "tailwind-merge";
 
 export interface TabItem<T extends string = string> {

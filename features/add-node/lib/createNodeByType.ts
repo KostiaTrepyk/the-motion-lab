@@ -8,7 +8,13 @@ export const createNodeByType = (type: ElementType, id: string): CanvasNode => {
 				id,
 				name: "Div",
 				type: "div",
-				props: { className: "p-4 bg-neutral-800 rounded-md min-h-[50px] min-w-[50px]" },
+				props: {
+					style: {
+						padding: "16px",
+						borderRadius: "4px",
+						backgroundColor: "#27272a",
+					},
+				},
 				children: [],
 			};
 
@@ -18,9 +24,11 @@ export const createNodeByType = (type: ElementType, id: string): CanvasNode => {
 				name: "Motion Div",
 				type: "motion.div",
 				props: {
-					className: "p-4 bg-teal-600 rounded-md min-h-[50px] min-w-[50px]",
-					initial: { opacity: 0, scale: 0.8 },
-					animate: { opacity: 1, scale: 1 },
+					style: {
+						padding: "16px",
+						borderRadius: "4px",
+						backgroundColor: "#14b8a6",
+					},
 				},
 				children: [],
 			};

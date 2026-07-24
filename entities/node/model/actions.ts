@@ -1,7 +1,7 @@
 import { castDraft, type Draft } from "immer";
 import type { MotionProps } from "motion/react";
+import { findNodeInDraft, isDescendantOf } from "../lib/tree";
 import type { AnimatePresenceNode, CanvasNode, DivNode, MotionDivNode } from "../types/nodes";
-import { isDescendantOf, findNodeInDraft } from "../lib/tree";
 import { useLabStore } from "./store";
 
 export const MOTION_OBJECT_KEYS: ReadonlyArray<keyof MotionProps> = [
@@ -30,6 +30,9 @@ export interface LabStoreActions {
 	removeNode: (nodeId: string) => void;
 	updateNodeContent: (nodeId: string, content: string) => void;
 	updateNodeProps: (nodeId: string, payload: UpdatePropsPayload) => void;
+	updateNodeStyle: (nodeId: string, style: Partial<React.CSSProperties>) => void;
+	removeStyleProperty: (nodeId: string, propertyKey: keyof React.CSSProperties) => void;
+	removeMotionProperty: (nodeId: string, motionState: keyof MotionProps, propertyKey: string) => void;
 	moveNode: (activeId: string, overId: string, position: DropPosition) => void;
 	toggleHidden: (nodeId: string) => void;
 	toggleLocked: (nodeId: string) => void;
@@ -98,12 +101,56 @@ function updateNodeProps(nodeId: string, payload: UpdatePropsPayload): void {
 		if (!node) return;
 
 		if (node.type === "div" && payload.type === "div") {
-			Object.assign(node.props, castDraft(payload.props));
+			const remainingProps = { ...payload.props };
+			if ("style" in remainingProps) {
+				const styleValue = remainingProps.style;
+				if (styleValue !== undefined && styleValue !== null) {
+					const currentStyle = { ...(node.props.style || {}) };
+					Object.entries(styleValue).forEach(([key, val]) => {
+						if (val === "" || val === undefined || val === null) {
+							delete currentStyle[key as keyof React.CSSProperties];
+						} else {
+							(currentStyle as Record<string, unknown>)[key] = castDraft(val);
+						}
+					});
+					if (Object.keys(currentStyle).length === 0) {
+						delete node.props.style;
+					} else {
+						node.props.style = currentStyle;
+					}
+				} else if (styleValue === undefined) {
+					delete node.props.style;
+				}
+				delete remainingProps.style;
+			}
+			Object.assign(node.props, castDraft(remainingProps));
 		} else if (node.type === "AnimatePresence" && payload.type === "AnimatePresence") {
 			Object.assign(node.props, castDraft(payload.props));
 		} else if (node.type === "motion.div" && payload.type === "motion.div") {
 			// Создаем поверхностную копию, чтобы можно было безопасно удалять ключи
 			const remainingProps = { ...payload.props };
+
+			if ("style" in remainingProps) {
+				const styleValue = remainingProps.style;
+				if (styleValue !== undefined && styleValue !== null) {
+					const currentStyle = { ...(node.props.style || {}) };
+					Object.entries(styleValue).forEach(([key, val]) => {
+						if (val === "" || val === undefined || val === null) {
+							delete currentStyle[key as keyof React.CSSProperties];
+						} else {
+							(currentStyle as Record<string, unknown>)[key] = castDraft(val);
+						}
+					});
+					if (Object.keys(currentStyle).length === 0) {
+						delete node.props.style;
+					} else {
+						node.props.style = currentStyle;
+					}
+				} else if (styleValue === undefined) {
+					delete node.props.style;
+				}
+				delete remainingProps.style;
+			}
 
 			// Сначала точечно обновляем motion-свойства
 			MOTION_OBJECT_KEYS.forEach((key) => {
@@ -130,6 +177,54 @@ function updateNodeProps(nodeId: string, payload: UpdatePropsPayload): void {
 
 			// Теперь безопасно мержим оставшиеся (обычные) пропсы
 			Object.assign(node.props, castDraft(remainingProps));
+		}
+	});
+}
+
+function updateNodeStyle(nodeId: string, style: Partial<React.CSSProperties>): void {
+	useLabStore.setState((state) => {
+		const node = findNodeInDraft(state.nodes, nodeId);
+		if (!node) return;
+
+		if (node.type === "div" || node.type === "motion.div") {
+			const currentStyle = { ...(node.props.style || {}) };
+			Object.entries(style).forEach(([key, val]) => {
+				if (val === "" || val === undefined || val === null) {
+					delete currentStyle[key as keyof React.CSSProperties];
+				} else {
+					(currentStyle as Record<string, unknown>)[key] = castDraft(val);
+				}
+			});
+
+			if (Object.keys(currentStyle).length === 0) {
+				delete node.props.style;
+			} else {
+				node.props.style = currentStyle;
+			}
+		}
+	});
+}
+
+function removeStyleProperty(nodeId: string, propertyKey: keyof React.CSSProperties): void {
+	useLabStore.setState((state) => {
+		const node = findNodeInDraft(state.nodes, nodeId);
+		if (!node || (node.type !== "div" && node.type !== "motion.div") || !node.props.style) return;
+
+		delete node.props.style[propertyKey];
+		if (Object.keys(node.props.style).length === 0) {
+			delete node.props.style;
+		}
+	});
+}
+
+function removeMotionProperty(nodeId: string, motionState: keyof MotionProps, propertyKey: string): void {
+	useLabStore.setState((state) => {
+		const node = findNodeInDraft(state.nodes, nodeId);
+		if (!node || node.type !== "motion.div") return;
+
+		const targetState = node.props[motionState];
+		if (typeof targetState === "object" && targetState !== null) {
+			delete (targetState as Record<string, unknown>)[propertyKey];
 		}
 	});
 }
@@ -208,7 +303,7 @@ function toggleLocked(nodeId: string): void {
 		const node = findNodeInDraft(state.nodes, nodeId);
 		if (node) {
 			const newLockedState = !node.locked;
-			
+
 			function setLockedRecursive(n: CanvasNode, locked: boolean) {
 				n.locked = locked;
 				if ("children" in n && Array.isArray(n.children)) {
@@ -227,6 +322,9 @@ export const labStoreActions: LabStoreActions = {
 	removeNode,
 	updateNodeContent,
 	updateNodeProps,
+	updateNodeStyle,
+	removeStyleProperty,
+	removeMotionProperty,
 	moveNode,
 	toggleHidden,
 	toggleLocked,

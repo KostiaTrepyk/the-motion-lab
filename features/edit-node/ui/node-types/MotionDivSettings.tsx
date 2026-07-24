@@ -14,7 +14,7 @@ export interface MotionDivSettingsProps {
 }
 
 export function MotionDivSettings({ node }: MotionDivSettingsProps) {
-	const { updateClassName, handleAlignText } = useNodeStyles(node.id, "motion.div");
+	const { updateClassName } = useNodeStyles(node.id, "motion.div");
 
 	const hasActiveMotion = node.props.initial !== undefined || node.props.animate !== undefined;
 
@@ -31,11 +31,7 @@ export function MotionDivSettings({ node }: MotionDivSettingsProps) {
 			{/* Секция 1: Base / Styling */}
 			<Collapse text="Base / Styling" icon={<FiLayout className="w-4 h-4 text-amber-500" />} defaultOpen={true}>
 				<div className="px-1 pt-2 pb-3">
-					<BaseStylingSettings
-						node={node}
-						handleClassNameChange={(e) => updateClassName(e.target.value)}
-						handleAlignText={(val) => handleAlignText(node.props?.className, val)}
-					/>
+					<BaseStylingSettings node={node} handleClassNameChange={(e) => updateClassName(e.target.value)} />
 				</div>
 			</Collapse>
 
@@ -50,7 +46,7 @@ export function MotionDivSettings({ node }: MotionDivSettingsProps) {
 						}`}
 					/>
 				}
-				defaultOpen={true}
+				defaultOpen={false}
 			>
 				<div className="px-1 pt-2 pb-3">
 					<MotionTabsSettings node={node} />
@@ -90,7 +86,7 @@ export function MotionDivSettings({ node }: MotionDivSettingsProps) {
 						}`}
 					/>
 				}
-				defaultOpen={true}
+				defaultOpen={false}
 			>
 				<div className="px-1 pt-2 pb-3">
 					<TransitionSettings node={node} />

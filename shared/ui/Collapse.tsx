@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import { twMerge } from "tailwind-merge";
 
@@ -60,7 +60,7 @@ export function Collapse({
 					isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
 				)}
 			>
-				<div className="overflow-hidden">
+				<div className={isOpen ? "overflow-visible" : "overflow-hidden"}>
 					<div className={twMerge("flex flex-col", classNames?.content)}>{children}</div>
 				</div>
 			</div>

@@ -2,8 +2,7 @@
 
 import type { MotionDivNode } from "@/entities/node";
 import { labStoreActions } from "@/entities/node";
-import { Setting, Typography } from "@/shared/ui";
-import { INPUT_STYLES } from "./consts";
+import { Select, Setting, Typography } from "@/shared/ui";
 
 export interface DragControlsProps {
 	node: MotionDivNode;
@@ -32,18 +31,17 @@ export function DragControls({ node }: DragControlsProps) {
 			</Typography>
 
 			<Setting labelText="Drag Axis (Оси перетаскивания)">
-				<select
+				<Select
 					value={
 						currentDrag === true ? "both" : currentDrag === "x" ? "x" : currentDrag === "y" ? "y" : "none"
 					}
 					onChange={(e) => updateDragAxis(e.target.value as "none" | "both" | "x" | "y")}
-					className={INPUT_STYLES}
 				>
 					<option value="none">Disabled (отключено)</option>
 					<option value="both">Both (X & Y)</option>
 					<option value="x">X Axis Only</option>
 					<option value="y">Y Axis Only</option>
-				</select>
+				</Select>
 			</Setting>
 
 			<Setting labelText="Drag Elastic (Упругость)">

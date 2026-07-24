@@ -1,11 +1,11 @@
 "use client";
 
 import type { MotionDivNode } from "@/entities/node";
-import { labStoreActions } from "@/entities/node";
+import { labStoreActions, type CssPropertyValue } from "@/entities/node";
 import { Tabs } from "@/shared/ui";
-import type { TargetAndTransition } from "framer-motion";
 import { useState } from "react";
-import { TransformControls } from "../controls/TransformControls";
+import { DynamicCssField } from "../components/DynamicCssField";
+import { PropertyPicker } from "../components/PropertyPicker";
 
 export interface MotionTabsSettingsProps {
 	node: MotionDivNode;
@@ -53,27 +53,44 @@ export function MotionTabsSettings({ node }: MotionTabsSettingsProps) {
 				props: { [tab]: undefined },
 			});
 		} else {
-			const defaultObj: TargetAndTransition =
-				tab === "initial" ? { opacity: 0, scale: 0.9 } : { opacity: 1, scale: 1 };
-
 			labStoreActions.updateNodeProps(node.id, {
 				type: "motion.div",
-				props: { [tab]: defaultObj },
+				props: { [tab]: {} },
 			});
 		}
 	};
 
 	const rawStateProps = node.props[activeTab];
-	const targetStateProps: TargetAndTransition =
-		typeof rawStateProps === "object" && rawStateProps !== null ? (rawStateProps as TargetAndTransition) : {};
+	const targetStateProps: Record<string, CssPropertyValue> =
+		typeof rawStateProps === "object" && rawStateProps !== null
+			? (rawStateProps as Record<string, CssPropertyValue>)
+			: {};
 
-	const updateProp = (property: string, value: number) => {
+	const activeKeys = Object.keys(targetStateProps);
+
+	const handleUpdateProp = (key: string, value: CssPropertyValue) => {
 		if (!isCurrentEnabled) return;
 		labStoreActions.updateNodeProps(node.id, {
 			type: "motion.div",
 			props: {
 				[activeTab]: {
-					[property]: value,
+					[key]: value,
+				},
+			},
+		});
+	};
+
+	const handleRemoveProp = (key: string) => {
+		labStoreActions.removeMotionProperty(node.id, activeTab, key);
+	};
+
+	const handleAddProperty = (key: string, defaultValue: CssPropertyValue) => {
+		if (!isCurrentEnabled) return;
+		labStoreActions.updateNodeProps(node.id, {
+			type: "motion.div",
+			props: {
+				[activeTab]: {
+					[key]: defaultValue,
 				},
 			},
 		});
@@ -115,11 +132,29 @@ export function MotionTabsSettings({ node }: MotionTabsSettingsProps) {
 						</span>
 					</div>
 				) : (
-					<TransformControls
-						targetProps={targetStateProps}
-						onChange={updateProp}
-						defaultOpacity={activeTab === "initial" ? 0 : 1}
-					/>
+					<div className="flex flex-col gap-3">
+						{activeKeys.length === 0 ? (
+							<div className="py-4 text-neutral-500 text-xs text-center italic">
+								Нет добавленных CSS свойств. Используйте «+ Add Property» ниже.
+							</div>
+						) : (
+							<div className="space-y-2">
+								{activeKeys.map((key) => (
+									<DynamicCssField
+										key={key}
+										propKey={key}
+										value={targetStateProps[key]}
+										onChange={(val) => handleUpdateProp(key, val)}
+										onRemove={() => handleRemoveProp(key)}
+									/>
+								))}
+							</div>
+						)}
+
+						<div className="pt-1 border-neutral-800/60 border-t">
+							<PropertyPicker existingKeys={activeKeys} onAddProperty={handleAddProperty} />
+						</div>
+					</div>
 				)}
 			</div>
 		</div>

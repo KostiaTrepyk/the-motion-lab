@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useRef, useState, useCallback, useEffect } from "react";
-import { Setting, Typography } from "@/shared/ui";
-import { INPUT_STYLES } from "./consts";
+import { Button, Input, Setting, Typography } from "@/shared/ui";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export type CubicBezierArray = [number, number, number, number];
 
@@ -114,8 +113,8 @@ export function CubicBezierEditor({ value, onChange }: CubicBezierEditorProps) {
 			const rect = svgRef.current.getBoundingClientRect();
 			if (!rect.width || !rect.height) return;
 
-			const clientX = "touches" in e ? e.touches[0]?.clientX ?? 0 : e.clientX;
-			const clientY = "touches" in e ? e.touches[0]?.clientY ?? 0 : e.clientY;
+			const clientX = "touches" in e ? (e.touches[0]?.clientX ?? 0) : e.clientX;
+			const clientY = "touches" in e ? (e.touches[0]?.clientY ?? 0) : e.clientY;
 
 			// Sub-pixel Screen scaling ratio calculation
 			const scaleX = SVG_WIDTH / rect.width;
@@ -138,7 +137,7 @@ export function CubicBezierEditor({ value, onChange }: CubicBezierEditorProps) {
 				}
 			});
 		},
-		[onChange]
+		[onChange],
 	);
 
 	const handlePointerUp = useCallback(() => {
@@ -183,18 +182,17 @@ export function CubicBezierEditor({ value, onChange }: CubicBezierEditorProps) {
 				{Object.entries(PRESETS).map(([key, presetVal]) => {
 					const isActive = isPresetMatch(bezier, presetVal);
 					return (
-						<button
+						<Button
 							key={key}
 							type="button"
+							variant={isActive ? "soft" : "ghost"}
+							color={isActive ? "primary" : "secondary"}
+							size="small"
 							onClick={() => onChange(presetVal)}
-							className={`px-2 py-0.5 text-xs rounded border font-medium transition-colors ${
-								isActive
-									? "bg-amber-500/20 text-amber-400 border-amber-500/40"
-									: "bg-neutral-900 text-neutral-400 border-neutral-800 hover:text-neutral-200 hover:bg-neutral-800/80"
-							}`}
+							className="h-7 text-xs"
 						>
 							{key}
-						</button>
+						</Button>
 					);
 				})}
 			</div>
@@ -206,7 +204,7 @@ export function CubicBezierEditor({ value, onChange }: CubicBezierEditorProps) {
 					width={SVG_WIDTH}
 					height={SVG_HEIGHT}
 					viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
-					className="touch-none cursor-crosshair max-w-full"
+					className="max-w-full touch-none cursor-crosshair"
 				>
 					{/* Grid lines */}
 					<line
@@ -258,7 +256,7 @@ export function CubicBezierEditor({ value, onChange }: CubicBezierEditorProps) {
 							startDrag(1);
 						}}
 						onTouchStart={() => startDrag(1)}
-						className="cursor-grab active:cursor-grabbing hover:stroke-amber-300 transition-colors"
+						className="hover:stroke-amber-300 transition-colors cursor-grab active:cursor-grabbing"
 					/>
 
 					{/* Control Point 2 (Amber) */}
@@ -274,7 +272,7 @@ export function CubicBezierEditor({ value, onChange }: CubicBezierEditorProps) {
 							startDrag(2);
 						}}
 						onTouchStart={() => startDrag(2)}
-						className="cursor-grab active:cursor-grabbing hover:stroke-amber-300 transition-colors"
+						className="hover:stroke-amber-300 transition-colors cursor-grab active:cursor-grabbing"
 					/>
 				</svg>
 			</div>
@@ -285,17 +283,20 @@ export function CubicBezierEditor({ value, onChange }: CubicBezierEditorProps) {
 					<Typography type="mono" className="text-neutral-400 text-xs">
 						Preview ({bezierCssStr})
 					</Typography>
-					<button
+					<Button
 						type="button"
+						variant="soft"
+						color="primary"
+						size="small"
 						onClick={triggerPreviewAnimation}
-						className="bg-amber-500/10 hover:bg-amber-500/20 px-2 py-0.5 border border-amber-500/30 rounded font-medium text-amber-400 hover:text-amber-300 text-xs transition-colors"
+						className="px-2 h-6 text-[11px]"
 					>
 						Play
-					</button>
+					</Button>
 				</div>
 				<div className="relative bg-neutral-950 border border-neutral-800 rounded-full w-full h-3 overflow-hidden">
 					<div
-						className="top-0 bottom-0 left-0 absolute bg-gradient-to-r from-pink-500 to-amber-500 shadow-[0_0_8px_rgba(236,72,153,0.8)] rounded-full w-3 h-3"
+						className="top-0 bottom-0 left-0 absolute bg-linear-to-r from-pink-500 to-amber-500 shadow-[0_0_8px_rgba(236,72,153,0.8)] rounded-full w-3 h-3"
 						style={{
 							animation: isPlayingPreview ? `bezierPreview 1s ${bezierCssStr} forwards` : "none",
 						}}
@@ -316,43 +317,39 @@ export function CubicBezierEditor({ value, onChange }: CubicBezierEditorProps) {
 			{/* Numeric Inputs */}
 			<div className="gap-2 grid grid-cols-4">
 				<Setting labelText="X1">
-					<input
+					<Input
 						type="number"
 						step="0.05"
 						min="0"
 						max="1"
 						value={x1}
 						onChange={(e) => onChange([parseFloat(e.target.value) || 0, y1, x2, y2])}
-						className={INPUT_STYLES}
 					/>
 				</Setting>
 				<Setting labelText="Y1">
-					<input
+					<Input
 						type="number"
 						step="0.05"
 						value={y1}
 						onChange={(e) => onChange([x1, parseFloat(e.target.value) || 0, x2, y2])}
-						className={INPUT_STYLES}
 					/>
 				</Setting>
 				<Setting labelText="X2">
-					<input
+					<Input
 						type="number"
 						step="0.05"
 						min="0"
 						max="1"
 						value={x2}
 						onChange={(e) => onChange([x1, y1, parseFloat(e.target.value) || 0, y2])}
-						className={INPUT_STYLES}
 					/>
 				</Setting>
 				<Setting labelText="Y2">
-					<input
+					<Input
 						type="number"
 						step="0.05"
 						value={y2}
 						onChange={(e) => onChange([x1, y1, x2, parseFloat(e.target.value) || 0])}
-						className={INPUT_STYLES}
 					/>
 				</Setting>
 			</div>

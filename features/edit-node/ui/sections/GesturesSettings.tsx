@@ -1,12 +1,12 @@
 "use client";
 
 import type { MotionDivNode } from "@/entities/node";
-import { labStoreActions } from "@/entities/node";
+import { labStoreActions, type CssPropertyValue } from "@/entities/node";
 import { Tabs } from "@/shared/ui";
-import type { TargetAndTransition } from "framer-motion";
 import { useState } from "react";
+import { DynamicCssField } from "../components/DynamicCssField";
+import { PropertyPicker } from "../components/PropertyPicker";
 import { DragControls } from "../controls/DragControls";
-import { TransformControls } from "../controls/TransformControls";
 import { ViewportControls } from "../controls/ViewportControls";
 
 export interface GesturesSettingsProps {
@@ -89,34 +89,47 @@ export function GesturesSettings({ node }: GesturesSettingsProps) {
 				},
 			});
 		} else {
-			const defaultObj: TargetAndTransition =
-				gesture === "whileHover"
-					? { scale: 1.05 }
-					: gesture === "whileTap"
-						? { scale: 0.95 }
-						: gesture === "whileDrag"
-							? { scale: 1.02 }
-							: { opacity: 1 };
-
 			labStoreActions.updateNodeProps(node.id, {
 				type: "motion.div",
 				props: {
-					[gesture]: defaultObj,
+					[gesture]: {},
 					...(gesture === "whileDrag" ? { drag: true } : {}),
 				},
 			});
 		}
 	};
 
-	const targetProps = (node.props[activeGesture] as TargetAndTransition | undefined) || {};
+	const rawGestureProps = node.props[activeGesture];
+	const targetStateProps: Record<string, CssPropertyValue> =
+		typeof rawGestureProps === "object" && rawGestureProps !== null
+			? (rawGestureProps as Record<string, CssPropertyValue>)
+			: {};
 
-	const updateGestureProp = (property: string, value: number) => {
+	const activeKeys = Object.keys(targetStateProps);
+
+	const handleUpdateProp = (key: string, value: CssPropertyValue) => {
 		if (!isCurrentEnabled) return;
 		labStoreActions.updateNodeProps(node.id, {
 			type: "motion.div",
 			props: {
 				[activeGesture]: {
-					[property]: value,
+					[key]: value,
+				},
+			},
+		});
+	};
+
+	const handleRemoveProp = (key: string) => {
+		labStoreActions.removeMotionProperty(node.id, activeGesture, key);
+	};
+
+	const handleAddProperty = (key: string, defaultValue: CssPropertyValue) => {
+		if (!isCurrentEnabled) return;
+		labStoreActions.updateNodeProps(node.id, {
+			type: "motion.div",
+			props: {
+				[activeGesture]: {
+					[key]: defaultValue,
 				},
 			},
 		});
@@ -158,15 +171,35 @@ export function GesturesSettings({ node }: GesturesSettingsProps) {
 						</span>
 					</div>
 				) : (
-					<>
-						<TransformControls targetProps={targetProps} onChange={updateGestureProp} />
+					<div className="flex flex-col gap-3">
+						{activeKeys.length === 0 ? (
+							<div className="py-4 text-neutral-500 text-xs text-center italic">
+								Нет свойств анимации для этого жеста. Добавьте свойства через «+ Add Property».
+							</div>
+						) : (
+							<div className="space-y-2">
+								{activeKeys.map((key) => (
+									<DynamicCssField
+										key={key}
+										propKey={key}
+										value={targetStateProps[key]}
+										onChange={(val) => handleUpdateProp(key, val)}
+										onRemove={() => handleRemoveProp(key)}
+									/>
+								))}
+							</div>
+						)}
+
+						<div className="pt-1 border-neutral-800/60 border-t">
+							<PropertyPicker existingKeys={activeKeys} onAddProperty={handleAddProperty} />
+						</div>
 
 						{/* Drag specific controls */}
 						{activeGesture === "whileDrag" && <DragControls node={node} />}
 
 						{/* InView specific controls */}
 						{activeGesture === "whileInView" && <ViewportControls node={node} />}
-					</>
+					</div>
 				)}
 			</div>
 		</div>

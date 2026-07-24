@@ -1,13 +1,11 @@
 "use client";
 
-import React from "react";
 import type { MotionDivNode } from "@/entities/node";
 import { labStoreActions } from "@/entities/node";
-import { Setting, Tabs } from "@/shared/ui";
+import { Input, Setting, Tabs } from "@/shared/ui";
 import type { Transition } from "framer-motion";
 import { CubicBezierEditor, type CubicBezierArray } from "../controls/CubicBezierEditor";
 import { SpringControls, type SpringConfig } from "../controls/SpringControls";
-import { INPUT_STYLES } from "../controls/consts";
 
 export interface TransitionSettingsProps {
 	node: MotionDivNode;
@@ -20,8 +18,7 @@ export function TransitionSettings({ node }: TransitionSettingsProps) {
 
 	const currentTransition = (node.props.transition as Transition | undefined) || {};
 
-	const transitionType: TransitionType =
-		(currentTransition.type as TransitionType) === "tween" ? "tween" : "spring";
+	const transitionType: TransitionType = (currentTransition.type as TransitionType) === "tween" ? "tween" : "spring";
 
 	const typeTabs = [
 		{ id: "spring" as const, label: "Spring (Пружина)" },
@@ -38,7 +35,7 @@ export function TransitionSettings({ node }: TransitionSettingsProps) {
 			labStoreActions.updateNodeProps(node.id, {
 				type: "motion.div",
 				props: {
-					transition: { type: "spring", stiffness: 100, damping: 10, mass: 1 },
+					transition: {},
 				},
 			});
 		}
@@ -80,16 +77,14 @@ export function TransitionSettings({ node }: TransitionSettingsProps) {
 	return (
 		<div className="flex flex-col gap-3 py-1">
 			{/* Enable/Disable Toggle Switch for Transition */}
-			<div className="flex items-center justify-between p-2.5 bg-neutral-900/40 rounded-xl border border-neutral-800/60">
-				<span className="text-xs font-semibold text-neutral-300">
-					Настройка перехода (Transition)
-				</span>
+			<div className="flex justify-between items-center bg-neutral-900/40 p-2.5 border border-neutral-800/60 rounded-xl">
+				<span className="font-semibold text-neutral-300 text-xs">Настройка перехода (Transition)</span>
 				<label className="flex items-center gap-2 cursor-pointer select-none">
 					<input
 						type="checkbox"
 						checked={isTransitionEnabled}
 						onChange={(e) => toggleTransitionEnabled(e.target.checked)}
-						className="accent-amber-500 rounded cursor-pointer w-4 h-4"
+						className="rounded w-4 h-4 accent-amber-500 cursor-pointer"
 					/>
 					<span
 						className={`text-xs font-medium ${
@@ -102,12 +97,12 @@ export function TransitionSettings({ node }: TransitionSettingsProps) {
 			</div>
 
 			{!isTransitionEnabled ? (
-				<div className="py-6 px-3 text-center text-xs text-neutral-500 bg-neutral-950/40 rounded-lg border border-neutral-800/40 flex flex-col items-center gap-1">
+				<div className="flex flex-col items-center gap-1 bg-neutral-950/40 px-3 py-6 border border-neutral-800/40 rounded-lg text-neutral-500 text-xs text-center">
 					<span>
-						Настройка <strong className="text-neutral-300 font-mono">Transition</strong> выключена.
+						Настройка <strong className="font-mono text-neutral-300">Transition</strong> выключена.
 					</span>
-					<span className="text-neutral-600 text-[11px]">
-						Атрибут <code className="text-amber-400/80 font-mono">transition</code> удален из компонента.
+					<span className="text-[11px] text-neutral-600">
+						Атрибут <code className="font-mono text-amber-400/80">transition</code> удален из компонента.
 					</span>
 				</div>
 			) : (
@@ -116,26 +111,24 @@ export function TransitionSettings({ node }: TransitionSettingsProps) {
 					<Tabs items={typeTabs} activeTab={transitionType} onChange={handleTypeChange} />
 
 					{/* Global Timing: Duration and Delay */}
-					<div className="grid grid-cols-2 gap-2 bg-neutral-900/40 p-2.5 rounded-xl border border-neutral-800/60">
+					<div className="gap-2 grid grid-cols-2 bg-neutral-900/40 p-2.5 border border-neutral-800/60 rounded-xl">
 						<Setting labelText="Duration (сек)">
-							<input
+							<Input
 								type="number"
 								step="0.1"
 								min="0"
 								value={duration}
 								onChange={(e) => updateTransitionProp({ duration: parseFloat(e.target.value) || 0 })}
-								className={INPUT_STYLES}
 							/>
 						</Setting>
 
 						<Setting labelText="Delay (задержка сек)">
-							<input
+							<Input
 								type="number"
 								step="0.1"
 								min="0"
 								value={delay}
 								onChange={(e) => updateTransitionProp({ delay: parseFloat(e.target.value) || 0 })}
-								className={INPUT_STYLES}
 							/>
 						</Setting>
 					</div>

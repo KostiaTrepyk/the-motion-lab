@@ -270,6 +270,79 @@ describe("labStoreActions", () => {
 			expect(node.props).not.toHaveProperty("initial");
 			expect(node.props).not.toHaveProperty("whileHover");
 		});
+
+		it("должен делать глубокий мердж для объекта style и сохранять существующие стили", () => {
+			const divNode = createDivNode("div-1");
+			divNode.props.style = { width: "100px", backgroundColor: "#ffffff" };
+			divNode.props.className = "flex justify-between";
+			useLabStore.setState({ nodes: [divNode] });
+
+			labStoreActions.updateNodeProps("div-1", {
+				type: "div",
+				props: { style: { height: "200px" } },
+			});
+
+			const state = useLabStore.getState();
+			const node = state.nodes[0] as DivNode;
+
+			expect(node.props.style).toEqual({
+				width: "100px",
+				backgroundColor: "#ffffff",
+				height: "200px",
+			});
+			expect(node.props.className).toBe("flex justify-between");
+		});
+	});
+
+	describe("updateNodeStyle", () => {
+		it("должен обновлять style объекта и сохранять className нетронутым", () => {
+			const divNode = createDivNode("div-1");
+			divNode.props.style = { width: "50px" };
+			divNode.props.className = "p-4 font-bold";
+			useLabStore.setState({ nodes: [divNode] });
+
+			labStoreActions.updateNodeStyle("div-1", { height: "50px", backgroundColor: "red" });
+
+			const state = useLabStore.getState();
+			const node = state.nodes[0] as DivNode;
+
+			expect(node.props.style).toEqual({
+				width: "50px",
+				height: "50px",
+				backgroundColor: "red",
+			});
+			expect(node.props.className).toBe("p-4 font-bold");
+		});
+
+		it("должен удалять свойство из style при передаче пустой строки", () => {
+			const divNode = createDivNode("div-1");
+			divNode.props.style = { width: "100px", borderRadius: "8px" };
+			useLabStore.setState({ nodes: [divNode] });
+
+			labStoreActions.updateNodeStyle("div-1", { borderRadius: "" });
+
+			const state = useLabStore.getState();
+			const node = state.nodes[0] as DivNode;
+
+			expect(node.props.style).toEqual({ width: "100px" });
+			expect(node.props.style).not.toHaveProperty("borderRadius");
+		});
+	});
+
+	describe("removeMotionProperty", () => {
+		it("должен удалять конкретное свойство из motion-объекта (например opacity из animate)", () => {
+			const motionNode = createMotionNode("motion-1");
+			motionNode.props.animate = { opacity: 1, scale: 1.2, x: "10px" };
+			useLabStore.setState({ nodes: [motionNode] });
+
+			labStoreActions.removeMotionProperty("motion-1", "animate", "opacity");
+
+			const state = useLabStore.getState();
+			const node = state.nodes[0] as MotionDivNode;
+
+			expect(node.props.animate).toEqual({ scale: 1.2, x: "10px" });
+			expect(node.props.animate).not.toHaveProperty("opacity");
+		});
 	});
 
 	describe("moveNode", () => {

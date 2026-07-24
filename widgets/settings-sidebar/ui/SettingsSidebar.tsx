@@ -4,7 +4,6 @@ import type { CanvasNode } from "@/entities/node";
 import { useLabStore } from "@/entities/node";
 import { DivSettings, MotionDivSettings, TextSettings } from "@/features/edit-node";
 import { Sidebar, Typography } from "@/shared/ui";
-import React from "react";
 
 function findSelectedNode(nodes: CanvasNode[], id: string): CanvasNode | null {
 	for (const node of nodes) {
