@@ -33,6 +33,8 @@ describe("labStoreActions", () => {
 		useLabStore.setState({
 			nodes: [],
 			selectedNodeId: null,
+			past: [],
+			future: [],
 		});
 	});
 
@@ -412,6 +414,42 @@ describe("labStoreActions", () => {
 
 			expect(warnSpy).toHaveBeenCalledWith("Cannot move a parent node into its own descendant.");
 			warnSpy.mockRestore();
+		});
+	});
+
+	describe("undo & redo", () => {
+		it("должен сохранять историю при добавлении узла и восстанавливать состояние при undo", () => {
+			const node1 = createDivNode("node-1");
+			labStoreActions.addNode(node1);
+
+			expect(useLabStore.getState().nodes).toHaveLength(1);
+			expect(useLabStore.getState().past).toHaveLength(1);
+
+			labStoreActions.undo();
+
+			expect(useLabStore.getState().nodes).toHaveLength(0);
+			expect(useLabStore.getState().future).toHaveLength(1);
+		});
+
+		it("должен выполнять redo после undo", () => {
+			const node1 = createDivNode("node-1");
+			labStoreActions.addNode(node1);
+
+			labStoreActions.undo();
+			expect(useLabStore.getState().nodes).toHaveLength(0);
+
+			labStoreActions.redo();
+			expect(useLabStore.getState().nodes).toHaveLength(1);
+			expect(useLabStore.getState().nodes[0].id).toBe("node-1");
+		});
+
+		it("должен очищать future при новом действии после undo", () => {
+			labStoreActions.addNode(createDivNode("node-1"));
+			labStoreActions.undo();
+			expect(useLabStore.getState().future).toHaveLength(1);
+
+			labStoreActions.addNode(createDivNode("node-2"));
+			expect(useLabStore.getState().future).toHaveLength(0);
 		});
 	});
 });

@@ -36,6 +36,19 @@ export interface LabStoreActions {
 	moveNode: (activeId: string, overId: string, position: DropPosition) => void;
 	toggleHidden: (nodeId: string) => void;
 	toggleLocked: (nodeId: string) => void;
+	undo: () => void;
+	redo: () => void;
+}
+
+const MAX_HISTORY_LENGTH = 50;
+
+function saveHistorySnapshot(state: Draft<ReturnType<typeof useLabStore.getState>>): void {
+	const snapshot = JSON.parse(JSON.stringify(state.nodes)) as CanvasNode[];
+	state.past.push(castDraft(snapshot));
+	if (state.past.length > MAX_HISTORY_LENGTH) {
+		state.past.shift();
+	}
+	state.future = [];
 }
 
 function changeSelectedNode(newSelectedNodeId: string | null): void {
@@ -46,6 +59,7 @@ function changeSelectedNode(newSelectedNodeId: string | null): void {
 
 function addNode(newNode: CanvasNode, parentId: string | null = null): void {
 	useLabStore.setState((state) => {
+		saveHistorySnapshot(state);
 		if (!parentId) {
 			state.nodes.push(castDraft(newNode));
 			return;
@@ -64,6 +78,7 @@ function addNode(newNode: CanvasNode, parentId: string | null = null): void {
 
 function removeNode(nodeId: string): void {
 	useLabStore.setState((state) => {
+		saveHistorySnapshot(state);
 		function findAndRemove(nodes: Draft<CanvasNode[]>): boolean {
 			for (let i = 0; i < nodes.length; i++) {
 				if (nodes[i].id === nodeId) {
@@ -88,6 +103,7 @@ function removeNode(nodeId: string): void {
 
 function updateNodeContent(nodeId: string, content: string): void {
 	useLabStore.setState((state) => {
+		saveHistorySnapshot(state);
 		const node = findNodeInDraft(state.nodes, nodeId);
 		if (node && node.type === "text") {
 			node.content = content;
@@ -99,6 +115,8 @@ function updateNodeProps(nodeId: string, payload: UpdatePropsPayload): void {
 	useLabStore.setState((state) => {
 		const node = findNodeInDraft(state.nodes, nodeId);
 		if (!node) return;
+
+		saveHistorySnapshot(state);
 
 		if (node.type === "div" && payload.type === "div") {
 			const remainingProps = { ...payload.props };
@@ -186,6 +204,8 @@ function updateNodeStyle(nodeId: string, style: Partial<React.CSSProperties>): v
 		const node = findNodeInDraft(state.nodes, nodeId);
 		if (!node) return;
 
+		saveHistorySnapshot(state);
+
 		if (node.type === "div" || node.type === "motion.div") {
 			const currentStyle = { ...(node.props.style || {}) };
 			Object.entries(style).forEach(([key, val]) => {
@@ -210,6 +230,7 @@ function removeStyleProperty(nodeId: string, propertyKey: keyof React.CSSPropert
 		const node = findNodeInDraft(state.nodes, nodeId);
 		if (!node || (node.type !== "div" && node.type !== "motion.div") || !node.props.style) return;
 
+		saveHistorySnapshot(state);
 		delete node.props.style[propertyKey];
 		if (Object.keys(node.props.style).length === 0) {
 			delete node.props.style;
@@ -222,6 +243,7 @@ function removeMotionProperty(nodeId: string, motionState: keyof MotionProps, pr
 		const node = findNodeInDraft(state.nodes, nodeId);
 		if (!node || node.type !== "motion.div") return;
 
+		saveHistorySnapshot(state);
 		const targetState = node.props[motionState];
 		if (typeof targetState === "object" && targetState !== null) {
 			delete (targetState as Record<string, unknown>)[propertyKey];
@@ -238,6 +260,8 @@ function moveNode(activeId: string, overId: string, position: DropPosition): voi
 			console.warn("Cannot move a parent node into its own descendant.");
 			return;
 		}
+
+		saveHistorySnapshot(state);
 
 		let draggedNode: CanvasNode | null = null;
 
@@ -293,6 +317,7 @@ function toggleHidden(nodeId: string): void {
 	useLabStore.setState((state) => {
 		const node = findNodeInDraft(state.nodes, nodeId);
 		if (node) {
+			saveHistorySnapshot(state);
 			node.hidden = !node.hidden;
 		}
 	});
@@ -302,6 +327,7 @@ function toggleLocked(nodeId: string): void {
 	useLabStore.setState((state) => {
 		const node = findNodeInDraft(state.nodes, nodeId);
 		if (node) {
+			saveHistorySnapshot(state);
 			const newLockedState = !node.locked;
 
 			function setLockedRecursive(n: CanvasNode, locked: boolean) {
@@ -313,6 +339,34 @@ function toggleLocked(nodeId: string): void {
 
 			setLockedRecursive(node as CanvasNode, newLockedState);
 		}
+	});
+}
+
+function undo(): void {
+	useLabStore.setState((state) => {
+		if (state.past.length === 0) return;
+
+		const previousNodes = state.past.pop();
+		if (!previousNodes) return;
+
+		const snapshot = JSON.parse(JSON.stringify(state.nodes)) as CanvasNode[];
+		state.future.push(castDraft(snapshot));
+
+		state.nodes = castDraft(previousNodes);
+	});
+}
+
+function redo(): void {
+	useLabStore.setState((state) => {
+		if (state.future.length === 0) return;
+
+		const nextNodes = state.future.pop();
+		if (!nextNodes) return;
+
+		const snapshot = JSON.parse(JSON.stringify(state.nodes)) as CanvasNode[];
+		state.past.push(castDraft(snapshot));
+
+		state.nodes = castDraft(nextNodes);
 	});
 }
 
@@ -328,4 +382,6 @@ export const labStoreActions: LabStoreActions = {
 	moveNode,
 	toggleHidden,
 	toggleLocked,
+	undo,
+	redo,
 };

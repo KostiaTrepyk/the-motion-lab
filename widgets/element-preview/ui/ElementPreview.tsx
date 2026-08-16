@@ -1,39 +1,34 @@
 "use client";
 
-import { ExportButton } from "@/features/export-code";
 import { GenerateElement } from "@/features/preview";
-import { IconButton, Typography } from "@/shared/ui";
-import { useState } from "react";
-import { FiRefreshCw } from "react-icons/fi";
+import { useViewStore, type ViewBackground } from "@/features/view-background";
 import { twMerge } from "tailwind-merge";
 
-export function ElementPreview({ ...attrs }: React.HTMLAttributes<HTMLDivElement>) {
-	const [key, setKey] = useState<number>(1);
+const bgClasses: Record<ViewBackground, string> = {
+	dark: "bg-neutral-950/80 border-neutral-900/80 text-white",
+	light: "bg-neutral-100 border-neutral-300/80 text-neutral-900 shadow-inner",
+	grid: "bg-neutral-950 border-neutral-900/80 text-white",
+};
 
-	function refresh(): void {
-		setKey((prev) => prev + 1);
-	}
+const checkerboardStyle = {
+	backgroundImage:
+		"url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill-opacity='0.12'%3E%3Crect width='8' height='8' fill='%23fff'/%3E%3Crect x='8' y='8' width='8' height='8' fill='%23fff'/%3E%3C/svg%3E\")",
+};
+
+export function ElementPreview({ ...attrs }: React.HTMLAttributes<HTMLDivElement>) {
+	const viewBackground = useViewStore((state) => state.viewBackground);
 
 	return (
-		<div {...attrs} className={twMerge(attrs.className, "flex flex-col p-4")}>
-			<div className="flex justify-between items-center h-8">
-				<IconButton className="group" onClick={refresh} title="Обновить превью" variant="ghost" color="ghost">
-					<FiRefreshCw className="w-full h-full group-active:rotate-180 transition-[rotate] duration-200" />
-				</IconButton>
-
-				<ExportButton />
-			</div>
-
-			<Typography
-				type="h2"
-				className="mt-4 font-bold text-neutral-300 text-xl text-center uppercase tracking-widest"
-			>
-				View
-			</Typography>
-
-			<div className="flex justify-center items-center mt-4 w-full grow" key={key}>
-				<GenerateElement />
-			</div>
+		<div
+			{...attrs}
+			className={twMerge(
+				"relative flex justify-center items-center border border-t-0 rounded-b-xl w-full min-h-0 overflow-hidden transition-colors duration-200 grow",
+				bgClasses[viewBackground],
+				attrs.className,
+			)}
+			style={viewBackground === "grid" ? checkerboardStyle : undefined}
+		>
+			<GenerateElement />
 		</div>
 	);
 }

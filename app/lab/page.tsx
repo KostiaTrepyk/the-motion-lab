@@ -1,9 +1,11 @@
 "use client";
 
+import { ExportButton } from "@/features/export-code";
 import { CodeViewer } from "@/widgets/code-viewer";
 import { ElementPreview } from "@/widgets/element-preview";
 import { NodesExplorer } from "@/widgets/nodes-explorer";
 import { SettingsSidebar } from "@/widgets/settings-sidebar";
+import { TopBar } from "@/widgets/top-bar";
 import { motion } from "motion/react";
 
 export default function LabPage() {
@@ -17,8 +19,9 @@ export default function LabPage() {
 			>
 				<NodesExplorer className="border-neutral-900 border-r h-full min-h-0" />
 
-				<div className="flex flex-col justify-between col-span-3 h-full min-h-0">
-					<ElementPreview className="min-h-0 grow-5" />
+				<div className="flex flex-col justify-between col-span-3 h-full min-h-0 p-4">
+					<TopBar rightSlot={<ExportButton />} />
+					<ElementPreview className="min-h-0 grow" />
 					<CodeViewer />
 				</div>
 
